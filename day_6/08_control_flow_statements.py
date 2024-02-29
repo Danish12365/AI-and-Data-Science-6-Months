@@ -119,14 +119,15 @@
 
 
 # loops
+
 # Example 1: For loop with range
 # for i in range(5):
 #     print(i)
 
 # # Example 2: For loop iterating over a list
-fruits = ["apple", "banana", "orange"]
-for fruit in fruits:
-    print(fruit)
+# fruits = ["apple", "banana", "orange"]
+# for fruit in fruits:
+#     print(fruit)
 
 # # Example 3: While loop with greater than operator
 # count = 0
@@ -139,11 +140,112 @@ for fruit in fruits:
 # while num != 0:
 #     print(num)
 #     num -= 2
+# Decrement num by 2 (num -= 2), which means subtract 2 from the current value of num.
 
 # # Example 5: Nested loops
 # for i in range(3):
 #     for j in range(3):
 #         print(i, j)
+        
+# The outer loop for i in range(3): iterates over the numbers 0, 1, and 2.
+# For each iteration of the outer loop, the inner loop for j in range(3): iterates over the
+# numbers 0, 1, and 2.
+# Inside the inner loop, the print(i, j) statement prints the current values of i and j.
+
+
+
+# Break and Continue:
+
+# Example 1: Break statement in for loop
+# for i in range(10):
+#     if i == 5:
+#         break
+#     print(i)
+
+# # Example 2: Continue statement in for loop
+# for i in range(10):
+#     if i % 2 == 0:
+#         continue
+#     print(i)
+
+# Inside the loop, there's an if statement that checks if the current value of i is even (i.e., divisible by 2) using 
+# the modulus operator %.
+# If i is even (i % 2 == 0), the continue statement is executed, which skips the rest of the code block for the current 
+# iteration and moves on to the next iteration of the loop.
+# If i is odd, the print(i) statement is executed, which prints the value of i.
+# Let's trace through the loop:
+
+# # Example 3: Break statement in while loop
+# num = 10
+# while num > 0:
+#     print(num)
+#     num -= 1
+#     if num == 5:
+#         break
+# num is decremented by 1 (num -= 1), effectively counting down from 10 to 1.
+
+
+# # Example 4: Continue statement in while loop
+# num = 10
+# while num > 0:
+#     num -= 1
+#     if num % 2 == 0:
+#         continue
+#     print(num)
+
+
+# # Example 5: Using break and continue together
+# for i in range(10):
+#     if i == 5:
+#         break
+#     elif i % 2 == 0:
+#         continue
+#     print(i)
+
+
+
+# Pass Statement:
+
+# Example 1: Using pass in if statement
+# x = 10
+# if x < 0:
+#     pass  # Placeholder for future implementation
+# else:
+#     print("Positive")
+
+# # Example 2: Using pass in while loop
+# num = 5
+# while num > 0:
+#     pass  # Placeholder for future implementation
+#     num -= 1
+
+# # Example 3: Using pass in for loop
+# for i in range(5):
+#     pass  # Placeholder for future implementation
+
+# # Example 4: Using pass in a function definition
+# def my_function():
+#     pass  # Placeholder for future implementation
+
+# # Example 5: Using pass in a class definition
+# class MyClass:
+#     def __init__(self):
+#         pass  # Placeholder for future implementation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
