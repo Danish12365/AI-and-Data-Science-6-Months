@@ -1,8 +1,8 @@
 # define the function
 # def greeting():
 #     print("Hello, World!")
-# greeting()  # Call the function
-
+#  # Call the function
+# greeting() 
 
 # def AOA():
 #     print("Aslam o Alikum")
