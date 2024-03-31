@@ -1,0 +1,119 @@
+Outliers: Outliers are data points in a dataset that deviate significantly from the rest of the observations.
+——————–
+Type of Outliers:
+1. Global Outlier
+2. Contextual Outlier
+3. Collective Outlier
+——————–
+How to detect them?
+1. Visually (Boxplot, Scatterplot, Histogram)
+2. Interquartile range (IQR) Method
+3. Z-Score method                    Z-score > 3 ya < -3 ho toh woh outlier maana jata hai.
+——————–
+How to deal with them?
+1. Delete them
+2. Transform them (log transformation, etc.)
+3. Impute them (mean, median, mode, etc.)
+4. Use Truncation or Capping
+5. Use robust models (But it will limit the models we can use)
+In Python, outliers in a dataset can be identified using various statistical methods and visualization techniques. Here's how you can detect outliers using Python:
+
+1. **Statistical Methods:**
+   - **Z-Score Method:** Calculate the Z-score of each data point and identify those with a Z-score greater than a certain threshold (e.g., 3).
+   - **Interquartile Range (IQR) Method:** Calculate the IQR (difference between the third quartile and the first quartile) and identify outliers as data points that fall below the first quartile minus 1.5 times the IQR or above the third quartile plus 1.5 times the IQR.
+
+2. **Visualization Techniques:**
+   - **Box Plot:** Visualize the distribution of the data using a box plot and identify outliers as points that fall outside the whiskers of the plot.
+   - **Histogram:** Plot a histogram of the data and look for data points that are far from the main concentration of values.
+   - **Scatter Plot:** For multidimensional data, create scatter plots for each pair of variables and visually identify data points that are significantly distant from the main cluster.
+
+Here's an example of how to detect outliers using the Z-score method in Python using pandas and NumPy:
+
+```python
+import pandas as pd
+import numpy as np
+
+# Generate sample data
+data = np.random.normal(loc=0, scale=1, size=100)
+
+# Calculate Z-scores
+z_scores = (data - data.mean()) / data.std()
+
+# Define threshold for outliers (e.g., 3 standard deviations)
+threshold = 3
+
+# Find outliers
+outliers = np.where(np.abs(z_scores) > threshold)
+
+# Print outliers
+print("Outliers:", data[outliers])
+```
+
+This code snippet generates sample data from a normal distribution, calculates the Z-scores for each data point, and identifies outliers based on a predefined threshold. You can adjust the threshold and use different methods based on your specific dataset and requirements.
+
+
+
+
+**Definition of Outliers:**
+Outliers are data points that significantly(نمایاں طور پر  differ from other observations in a dataset. They may be unusually high or low in value compared to the majority of the data points and can skew statistical analyses and machine learning models if not properly handled.
+
+**Types of Outliers:**
+1. **Univariate Outliers:** These outliers occur when a data point in a single feature variable is significantly different from other data points in that feature.
+2. **Multivariate Outliers:** These outliers occur when observations in multiple feature variables are collectively unusual compared to the rest of the dataset.
+3. **Global Outliers:** Also known as global anomalies, these outliers are unusual across the entire dataset.
+4. **Contextual Outliers:** Also known as conditional anomalies, these outliers are only unusual within specific contexts or subsets of the data.
+
+**Detection Methods for Outliers:**
+1. **Statistical Methods:**
+   - Z-Score Method
+   - Interquartile Range (IQR) Method
+   - Modified Z-Score Method
+   - Tukey's Fences
+   - Median Absolute Deviation (MAD)
+   
+2. **Visualization Techniques:**
+   - Box Plot
+   - Histogram
+   - Scatter Plot
+   - QQ Plot
+   - Density Plot
+   
+**Handling Outliers:**
+Once outliers are identified, they can be handled in several ways:
+- Removal: Remove outliers from the dataset.
+- Transformation: Apply transformations such as logarithmic transformation to make the data more normally distributed.
+- Imputation: Replace outliers with the mean, median, or another suitable value.
+- Binning: Group outliers into a separate category or bin.
+- Robust Models: Use models that are less sensitive to outliers, such as robust regression or tree-based algorithms.
+
+**Importance:**
+- Outliers can significantly impact statistical analyses and machine learning models, leading to inaccurate results and conclusions.
+- Identifying and properly handling outliers is crucial for ensuring the validity and reliability of data-driven decisions and insights.
+- Outliers may contain valuable information or indicate errors in data collection, so understanding their nature is essential for effective data analysis and interpretation.
+
+
+
+Python code to remove outliers
+import seaborn as sns
+import pandas as pd
+
+# Load the Titanic dataset
+titanic = sns.load_dataset('titanic')
+
+# Display the first few rows of the dataset
+print(titanic.head())
+
+# Calculate the IQR for the 'age' column
+Q1 = titanic['age'].quantile(0.25)
+Q3 = titanic['age'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define bounds for the outliers
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Remove outliers
+titanic_no_outliers = titanic[(titanic['age'] >= lower_bound) & (titanic['age'] <= upper_bound)]
+
+# Display the first few rows of the dataset without outliers
+print(titanic_no_outliers.head())
