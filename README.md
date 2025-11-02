@@ -2,7 +2,7 @@
 
 ## 📚 Course Outline
 
-This course is broken down into over 100 lectures. **Click the "Details" arrow below to expand the full syllabus.**
+This course is broken down into Total 184 lectures. **Click the "Details" arrow below to expand the full syllabus.**
 
 <details>
 <summary><b>Expand Full 102-Day Lecture Syllabus</b></summary>
@@ -702,11 +702,11 @@ How and why Register?
 
 **Muhammad Aammar Tufail, PhD**
 
-I am a **Data Scientist** and **Bioinformatician** based in Germany, currently working at the University of Kiel.
+A **Data Scientist** and **Bioinformatician** based in Germany, currently working at the University of Kiel.
 
-My passion is teaching Data Science, Machine Learning, and AI to a global audience. I create technical content and detailed tutorials in Urdu/Hindi on my **[YouTube channel](https://www.google.com/search?q=https://[www.youtube.com/YOUR_CHANNEL_LINK](https://www.youtube.com/@codanics))** and solve problems on **[Codanics.com](https://www.codanics.com)**.
+His passion is teaching Data Science, Machine Learning, and AI to a global audience. He create technical content and detailed tutorials in Urdu/Hindi on **[YouTube channel](https://www.google.com/search?q=https://[www.youtube.com/YOUR_CHANNEL_LINK](https://www.youtube.com/@codanics))** and solve problems on **[Codanics.com](https://www.codanics.com)**.
 
-  * **📫 Connect with me:** **[LinkedIn](https://www.google.com/search?q=https://[www.linkedin.com/in/YOUR_PROFILE_LINK](https://www.linkedin.com/in/dr-muhammad-aammar-tufail-02471213b/))**
+  * **📫 LinkedIn :** **[LinkedIn](https://www.google.com/search?q=https://[www.linkedin.com/in/YOUR_PROFILE_LINK](https://www.linkedin.com/in/dr-muhammad-aammar-tufail-02471213b/))**
 
 ## 📜 License
 
