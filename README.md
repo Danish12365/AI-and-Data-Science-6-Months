@@ -65,7 +65,7 @@ This course focuses on the most in-demand tools in the data science industry:
 * **Core Libraries:** Pandas, NumPy
 * **Data Visualization:** Matplotlib, Seaborn, Plotly
 * **Machine Learning:** Scikit-learn, XGBoost, CatBoost
-* **IDE / Notebooks:** VS Code, Jupyter Notebooks
+* **IDE / Notebooks:** VS Code, Jupyter Notebooks, Google Colab
 
 ---
 
