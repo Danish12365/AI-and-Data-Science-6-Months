@@ -1,0 +1,22 @@
+
+The sum of absolute differences (SAD):
+The sum of absolute differences (SAD) is a metric used to measure the similarity between two images, image blocks, or signals by calculating the sum of the absolute differences
+between corresponding elements. It is widely used in areas like digital image processing, motion estimation, and stereovision, and is also a computational technique for solving 
+various problems, such as finding the sum of absolute differences of indices in an array. 
+
+
+The "sum of squared distances" is a statistical measure of variability that calculates the sum of the squared differences between each data point and a reference point, 
+often the mean. This process involves subtracting the reference value from each data point, squaring each result, and then adding all the squared values together. 
+It is used to quantify the dispersion of a data set and is fundamental to methods like regression analysis, where it helps measure how well a model fits the data. 
+How to calculate the sum of squares
+Gather your data points: Collect all the individual values in your data set.
+Calculate the mean: Find the average of your data set.
+Subtract the mean: For each data point, subtract the mean from it.
+Square the results: Square each of the differences you found in the previous step.
+Sum the squares: Add all the squared values together to get the final sum of squares. 
+
+
+Danish	9A:11:27:4B:5A:1C	192.168.0.147		Edit   	
+Zain#	7E:A5:EA:54:C4:AD	192.168.0.133		Edit   	
+Shahroz...	38:78:62:C9:24:13	192.168.0.137		Edit   	
+DESKTOP-22E41IR	88:51:FB:50:44:35	192.168.0.108

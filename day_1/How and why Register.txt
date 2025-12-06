@@ -1,0 +1,5 @@
+## **Lecture_1:**
+How and why Register?
+
+* Introduction: Time: 15:56
+* Who is a Data Scientist?: Time: 03:20

@@ -1,0 +1,66 @@
+What do we do when data comes?
+
+1-domain knowledge
+
+metadata 
+
+full forms of columns
+
+numeric unit
+
+layout of the future engineering process
+
+
+
+2-Data preprocessing
+
+handling missing values 
+
+outliers detections
+
+
+
+3- Numerical Futures
+
+Is it numeric or not
+
+1000 or 1000 MB, clean and split or convert
+
+normalizing and scaling data
+
+handling skewness with binning or different methods
+
+and so on, if any
+create new columns
+
+
+4- categorical features
+
+types of categorical features and how to deal with them, like nominal and ordinal 
+encoding base on the catogery type like label encoding,onehot encoding,taget encoding,binery encoding
+
+
+5- data and time futures (when we deal time series)
+
+differet formet or date reformet and split time
+binning time like summer winter time formets like 12 pm 13 and differt countres times gmt
+cyclic timing, days, leaps, monts 
+
+6-test futures
+ nlp basics and termes
+
+7-image features 
+computer vision and image
+
+8-future selection
+filter method 
+wapper method
+embeded method
+dimensionalty reductions
+regulization methodes
+deeplearning methodes
+
+9-advance future eng technices
+
+10- real life data-projects like stock market etc
+

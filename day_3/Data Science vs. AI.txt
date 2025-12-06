@@ -1,0 +1,14 @@
+## **Lecture_5_Day-3:**
+* Data Science vs. AI: Time: 00:00
+* Data Science vs. Data Analytics: Time: 00:00
+* AI and Types of AI: Time: 00:00
+* Reading and Blogs for the course: Time: 04:50
+* History of AI: Time: 09:46
+* Find jobs in AI and Data Science: Time: 18:40
+* Kia AI meri job khaye ge?: Time: 11:30
+* Ideas for AI Developers: Time: 04:17
+* Main Goals of this Course: Time: 03:52
+* Why should I learn Python to learn AI?: Time: 05:45
+* Software Installation to learn Python for AI and Data Science: Time: 02:00
+* Conda Environments for coding in Python: Time: 06:14
+* Python IDEs and VScode: Time: 02:38

@@ -1,0 +1,6 @@
+## **Lecture_7_Day-5:**
+* Conda Environments (A-Z): Time: 36:48
+* First Line of code in python: Time: 29:43
+* Variables in Python: Time: 13:03
+* Operator in python: Time: 23:59
+* Data Types in Python: Time: 11:33
