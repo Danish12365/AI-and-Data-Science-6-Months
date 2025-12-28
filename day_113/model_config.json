@@ -1,0 +1,31 @@
+{
+  "feature_names": [
+    "credit_score",
+    "country",
+    "gender",
+    "age",
+    "balance",
+    "products_number",
+    "active_member",
+    "churn_triangle",
+    "age_risk_dist",
+    "age_bin",
+    "germany_inactive_risk",
+    "product_overload",
+    "zero_balance",
+    "balance_salary_ratio"
+  ],
+  "categorical_features": [
+    "country",
+    "gender",
+    "active_member",
+    "age_bin"
+  ],
+  "model_version": "1.0",
+  "training_date": "2024-12-26",
+  "performance": {
+    "cv_auc": 0.8700178655700128,
+    "test_auc": 0.879810473030812,
+    "test_accuracy": 0.869
+  }
+}
