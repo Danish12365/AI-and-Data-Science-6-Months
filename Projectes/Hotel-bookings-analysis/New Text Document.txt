@@ -1,0 +1,1442 @@
+
+
+
+
+
+
+
+# =============================================================================
+# Comprehensive EDA with 30+ Interactive Plotly Charts
+# =============================================================================
+
+print("🏨 HOTEL BOOKINGS ANALYSIS - PART 2")
+print("📊 Interactive Visualizations & Comprehensive EDA")
+
+# =============================================================================
+# SECTION A: HOTEL & CANCELLATION ANALYSIS
+# =============================================================================
+
+print("📊 SECTION A: HOTEL & CANCELLATION ANALYSIS")
+
+# -----------------------------------------------------------------------------
+# A.1 Hotel Type Distribution
+# -----------------------------------------------------------------------------
+print("1️⃣ Hotel Type Distribution")
+print("-"*80)
+
+hotel_counts = df_clean['hotel'].value_counts()
+print(hotel_counts)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=hotel_counts.index,
+        y=hotel_counts.values,
+        text=hotel_counts.values,
+        texttemplate='%{text:,}<br>(%{y:.1%})',
+        textposition='outside',
+        marker=dict(
+            color=[COLORS['hotel1'], COLORS['hotel2']],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🏨 Hotel Type Distribution<br><sub>Total Booking Volume by Property Type</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Hotel Type',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    font=dict(size=12, color='#2C3E50'),
+    hovermode='x unified',
+    height=500,
+    showlegend=False
+)
+
+fig.show()
+
+
+# -----------------------------------------------------------------------------
+# A.2 Overall Cancellation Rate
+# -----------------------------------------------------------------------------
+print("\n2️⃣ Overall Cancellation Rate Analysis")
+print("-"*80)
+
+cancellation_counts = df_clean['is_canceled'].value_counts()
+cancellation_rate = (cancellation_counts.get(1, 0) / len(df_clean) * 100)
+
+print(f"✓ Bookings Not Canceled: {cancellation_counts.get(0, 0):,} ({100-cancellation_rate:.2f}%)")
+print(f"✓ Bookings Canceled: {cancellation_counts.get(1, 0):,} ({cancellation_rate:.2f}%)")
+print()
+
+fig = go.Figure(data=[go.Pie(
+    labels=['Not Canceled', 'Canceled'],
+    values=cancellation_counts.values,
+    hole=0.5,
+    marker=dict(
+        colors=[COLORS['cancel_no'], COLORS['cancel_yes']],
+        line=dict(color='white', width=3)
+    ),
+    textinfo='label+percent',
+    textfont=dict(size=14, color='white', family='Arial Black'),
+    hovertemplate='<b>%{label}</b><br>Count: %{value:,}<br>Percentage: %{percent}<extra></extra>'
+)])
+
+fig.add_annotation(
+    text=f'<b>{cancellation_rate:.1f}%</b><br>Canceled',
+    x=0.5, y=0.5,
+    font=dict(size=20, color=COLORS['cancel_yes'], family='Arial Black'),
+    showarrow=False
+)
+
+fig.update_layout(
+    title={
+        'text': '❌ Overall Cancellation Rate<br><sub>Distribution of Booking Outcomes</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    height=500,
+    showlegend=True,
+    paper_bgcolor='white'
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# A.3 Cancellation Rate by Hotel Type
+# -----------------------------------------------------------------------------
+print("\n3️⃣ Cancellation Rate by Hotel Type")
+print("-"*80)
+
+cancellation_by_hotel = df_clean.groupby('hotel')['is_canceled'].agg(['sum', 'count', 'mean'])
+cancellation_by_hotel.columns = ['Canceled', 'Total', 'Cancellation_Rate']
+cancellation_by_hotel['Cancellation_Rate'] = cancellation_by_hotel['Cancellation_Rate'] * 100
+print(cancellation_by_hotel)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=cancellation_by_hotel.index,
+        y=cancellation_by_hotel['Cancellation_Rate'],
+        text=cancellation_by_hotel['Cancellation_Rate'],
+        texttemplate='%{text:.1f}%',
+        textposition='outside',
+        marker=dict(
+            color=[COLORS['hotel1'], COLORS['hotel2']],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Cancellation Rate: %{y:.1f}%<br>Canceled: %{customdata[0]:,}<br>Total: %{customdata[1]:,}<extra></extra>',
+        customdata=cancellation_by_hotel[['Canceled', 'Total']].values
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '❌ Cancellation Rate by Hotel Type<br><sub>Comparative Analysis of Cancellation Behavior</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Hotel Type',
+    yaxis_title='Cancellation Rate (%)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+# -----------------------------------------------------------------------------
+# A.4 Repeated Guests vs New Guests Cancellation
+# -----------------------------------------------------------------------------
+print("\n4️⃣ Cancellation Rate: New vs Repeated Guests")
+print("-"*80)
+
+cancellation_by_guest = df_clean.groupby('is_repeated_guest')['is_canceled'].mean() * 100
+new_guest_rate = cancellation_by_guest.get(0.0, 0.0)
+repeated_guest_rate = cancellation_by_guest.get(1.0, 0.0)
+
+print(f"✓ New Guests Cancellation Rate: {new_guest_rate:.2f}%")
+print(f"✓ Repeated Guests Cancellation Rate: {repeated_guest_rate:.2f}%")
+print()
+
+plot_labels = []
+plot_rates = []
+plot_colors = []
+
+if 0.0 in df_clean['is_repeated_guest'].values:
+    plot_labels.append('New Guests')
+    plot_rates.append(new_guest_rate)
+    plot_colors.append(COLORS['cancel_yes'])
+
+if 1.0 in df_clean['is_repeated_guest'].values:
+    plot_labels.append('Repeated Guests')
+    plot_rates.append(repeated_guest_rate)
+    plot_colors.append(COLORS['cancel_no'])
+
+if plot_rates:
+    fig = go.Figure(data=[
+        go.Bar(
+            x=plot_labels,
+            y=plot_rates,
+            text=plot_rates,
+            texttemplate='%{text:.2f}%',
+            textposition='outside',
+            marker=dict(color=plot_colors, line=dict(color='#2C3E50', width=2)),
+            hovertemplate='<b>%{x}</b><br>Cancellation Rate: %{y:.2f}%<extra></extra>'
+        )
+    ])
+
+    fig.update_layout(
+        title={
+            'text': '🔄 Cancellation Rate: New vs Repeated Guests<br><sub>Impact of Guest Loyalty on Cancellations</sub>',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+        },
+        xaxis_title='Guest Type',
+        yaxis_title='Cancellation Rate (%)',
+        plot_bgcolor='#F8F9FA',
+        paper_bgcolor='white',
+        height=500,
+        font=dict(size=12, color='#2C3E50')
+    )
+
+    fig.show()
+
+
+
+
+
+
+
+
+
+
+
+# =============================================================================
+# SECTION B: TIME-BASED TRENDS ANALYSIS
+# =============================================================================
+
+print("\n" + "="*80)
+print("📅 SECTION B: TIME-BASED TRENDS ANALYSIS")
+print("="*80 + "\n")
+
+# -----------------------------------------------------------------------------
+# B.1 Monthly Booking Trends
+# -----------------------------------------------------------------------------
+print("5️⃣ Monthly Booking Trends")
+print("-"*80)
+
+month_order = ['January', 'February', 'March', 'April', 'May', 'June',
+               'July', 'August', 'September', 'October', 'November', 'December']
+monthly_bookings = df_clean['arrival_date_month'].value_counts().reindex(month_order)
+print(monthly_bookings)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=month_order,
+    y=monthly_bookings.values,
+    mode='lines+markers+text',
+    name='Bookings',
+    line=dict(color=COLORS['primary'], width=4),
+    marker=dict(size=12, color=COLORS['cancel_yes'], line=dict(color='white', width=2)),
+    fill='tozeroy',
+    fillcolor='rgba(46, 134, 171, 0.2)',
+    text=monthly_bookings.values,
+    texttemplate='%{text:,}',
+    textposition='top center',
+    hovertemplate='<b>%{x}</b><br>Bookings: %{y:,}<extra></extra>'
+))
+
+fig.update_layout(
+    title={
+        'text': '📅 Monthly Booking Trends<br><sub>Seasonal Patterns in Hotel Reservations</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Month',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    hovermode='x unified',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# B.2 Yearly Booking Trends
+# -----------------------------------------------------------------------------
+print("\n6️⃣ Yearly Booking Trends")
+print("-"*80)
+
+yearly_bookings = df_clean['arrival_date_year'].value_counts().sort_index()
+print(yearly_bookings)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=yearly_bookings.index.astype(str),
+        y=yearly_bookings.values,
+        text=yearly_bookings.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=[COLORS['primary'], COLORS['warning'], COLORS['secondary']],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '📊 Yearly Booking Trends<br><sub>Annual Booking Volume Comparison</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Year',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+# -----------------------------------------------------------------------------
+# B.3 ADR Trends Over Months
+# -----------------------------------------------------------------------------
+print("\n7️⃣ Average Daily Rate Trends by Month")
+print("-"*80)
+
+adr_by_month = df_clean.groupby('arrival_date_month')['adr'].mean().reindex(month_order)
+print(adr_by_month)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=month_order,
+    y=adr_by_month.values,
+    mode='lines+markers+text',
+    line=dict(color=COLORS['success'], width=4),
+    marker=dict(size=12, color=COLORS['cancel_yes'], line=dict(color='white', width=2)),
+    text=adr_by_month.values,
+    texttemplate='€%{text:.0f}',
+    textposition='top center',
+    hovertemplate='<b>%{x}</b><br>Avg ADR: €%{y:.2f}<extra></extra>'
+))
+
+fig.update_layout(
+    title={
+        'text': '💰 Average Daily Rate Trends by Month<br><sub>Seasonal Pricing Patterns</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Month',
+    yaxis_title='Average Daily Rate (€)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    hovermode='x unified',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# B.4 Monthly Revenue Analysis
+# -----------------------------------------------------------------------------
+print("\n8️⃣ Monthly Revenue Analysis")
+print("-"*80)
+
+revenue_by_month = df_clean.groupby('arrival_date_month')['revenue'].sum().reindex(month_order)
+print(revenue_by_month)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Bar(
+    x=month_order,
+    y=revenue_by_month.values,
+    text=revenue_by_month.values,
+    texttemplate='€%{text:.2s}',
+    textposition='outside',
+    marker=dict(
+        color=revenue_by_month.values,
+        colorscale='Viridis',
+        showscale=True,
+        colorbar=dict(title='Revenue (€)'),
+        line=dict(color='#2C3E50', width=1)
+    ),
+    hovertemplate='<b>%{x}</b><br>Revenue: €%{y:,.0f}<extra></extra>'
+))
+
+fig.update_layout(
+    title={
+        'text': '💵 Monthly Revenue Trends<br><sub>Total Revenue Distribution Throughout the Year</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Month',
+    yaxis_title='Total Revenue (€)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+
+
+
+
+
+# =============================================================================
+# SECTION C: CUSTOMER & DEMOGRAPHIC ANALYSIS
+# =============================================================================
+
+print("\n" + "="*80)
+print("👥 SECTION C: CUSTOMER & DEMOGRAPHIC ANALYSIS")
+print("="*80 + "\n")
+
+# -----------------------------------------------------------------------------
+# C.1 Top 10 Countries by Bookings
+# -----------------------------------------------------------------------------
+print("9️⃣ Top 10 Countries by Bookings")
+print("-"*80)
+
+top_countries = df_clean['country_name'].value_counts().head(10)
+print(top_countries)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        y=top_countries.index[::-1],
+        x=top_countries.values[::-1],
+        orientation='h',
+        text=top_countries.values[::-1],
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=top_countries.values[::-1],
+            colorscale='Viridis',
+            showscale=True,
+            colorbar=dict(title='Bookings'),
+            line=dict(color='#2C3E50', width=1.5)
+        ),
+        hovertemplate='<b>%{y}</b><br>Bookings: %{x:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🌍 Top 10 Countries by Bookings<br><sub>Global Distribution of Hotel Guests</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Bookings',
+    yaxis_title='Country',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# C.2 Country-wise Cancellation Rate (Top 10)
+# -----------------------------------------------------------------------------
+print("\n🔟 Top 10 Countries - Cancellation Rate")
+print("-"*80)
+
+top_10_countries = df_clean['country_name'].value_counts().head(10).index
+country_cancel = df_clean[df_clean['country_name'].isin(top_10_countries)].groupby('country_name')['is_canceled'].mean() * 100
+country_cancel = country_cancel.sort_values(ascending=True)
+print(country_cancel)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        y=country_cancel.index,
+        x=country_cancel.values,
+        orientation='h',
+        text=country_cancel.values,
+        texttemplate='%{text:.1f}%',
+        textposition='outside',
+        marker=dict(
+            color=country_cancel.values,
+            colorscale='RdYlGn_r',
+            showscale=True,
+            colorbar=dict(title='Cancel %'),
+            line=dict(color='#2C3E50', width=1.5)
+        ),
+        hovertemplate='<b>%{y}</b><br>Cancellation Rate: %{x:.1f}%<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🌍 Cancellation Rate - Top 10 Countries<br><sub>Geographic Cancellation Patterns</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Cancellation Rate (%)',
+    yaxis_title='Country',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# C.3 Customer Type Distribution
+# -----------------------------------------------------------------------------
+print("\n1️⃣1️⃣ Customer Type Distribution")
+print("-"*80)
+
+customer_types = df_clean['customer_type'].value_counts()
+print(customer_types)
+print()
+
+fig = go.Figure(data=[go.Pie(
+    labels=customer_types.index,
+    values=customer_types.values,
+    hole=0.4,
+    marker=dict(
+        colors=['#3498DB', '#E74C3C', '#2ECC71', '#F39C12'],
+        line=dict(color='white', width=2)
+    ),
+    textinfo='label+percent',
+    textfont=dict(size=12, color='white', family='Arial'),
+    hovertemplate='<b>%{label}</b><br>Count: %{value:,}<br>Percentage: %{percent}<extra></extra>'
+)])
+
+fig.update_layout(
+    title={
+        'text': '👥 Customer Type Distribution<br><sub>Booking Segmentation by Customer Category</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    height=500,
+    showlegend=True,
+    paper_bgcolor='white'
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# C.4 Family vs Non-Family Bookings
+# -----------------------------------------------------------------------------
+print("\n1️⃣2️⃣ Family vs Non-Family Bookings")
+print("-"*80)
+
+family_bookings = df_clean['customer_segment'].value_counts()
+print(family_bookings)
+print()
+
+fig = go.Figure(data=[go.Pie(
+    labels=family_bookings.index,
+    values=family_bookings.values,
+    hole=0.5,
+    marker=dict(
+        colors=['#AED6F1', '#E8DAEF'],
+        line=dict(color='white', width=3)
+    ),
+    textinfo='label+percent',
+    textfont=dict(size=14, color='#2C3E50', family='Arial Black'),
+    hovertemplate='<b>%{label}</b><br>Count: %{value:,}<br>Percentage: %{percent}<extra></extra>'
+)])
+
+fig.update_layout(
+    title={
+        'text': '👨‍👩‍👧‍👦 Family vs Non-Family Bookings<br><sub>Guest Composition Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    height=500,
+    showlegend=True,
+    paper_bgcolor='white'
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# C.5 Repeated Guests Analysis
+# -----------------------------------------------------------------------------
+print("\n1️⃣3️⃣ New vs Repeated Guests")
+print("-"*80)
+
+repeated_guests = df_clean['is_repeated_guest'].value_counts()
+repeated_count = repeated_guests.get(1.0, 0)
+new_guest_count = repeated_guests.get(0.0, 0)
+total_guests = new_guest_count + repeated_count
+repeated_rate = (repeated_count / total_guests * 100) if total_guests > 0 else 0.0
+
+print(f"✓ New Guests: {new_guest_count:,} ({100-repeated_rate:.2f}%)")
+print(f"✓ Repeated Guests: {repeated_count:,} ({repeated_rate:.2f}%)")
+print()
+
+plot_labels_rg = []
+plot_values_rg = []
+plot_colors_rg = []
+
+if new_guest_count > 0:
+    plot_labels_rg.append('New Guests')
+    plot_values_rg.append(new_guest_count)
+    plot_colors_rg.append(COLORS['primary'])
+
+if repeated_count > 0:
+    plot_labels_rg.append('Repeated Guests')
+    plot_values_rg.append(repeated_count)
+    plot_colors_rg.append(COLORS['warning'])
+
+if plot_values_rg:
+    fig = go.Figure(data=[
+        go.Bar(
+            x=plot_labels_rg,
+            y=plot_values_rg,
+            text=plot_values_rg,
+            texttemplate='%{text:,}',
+            textposition='outside',
+            marker=dict(color=plot_colors_rg, line=dict(color='#2C3E50', width=2)),
+            hovertemplate='<b>%{x}</b><br>Count: %{y:,}<extra></extra>'
+        )
+    ])
+
+    fig.update_layout(
+        title={
+            'text': '🔄 New vs Repeated Guests<br><sub>Guest Loyalty Distribution</sub>',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+        },
+        xaxis_title='Guest Type',
+        yaxis_title='Number of Guests',
+        plot_bgcolor='#F8F9FA',
+        paper_bgcolor='white',
+        height=500,
+        font=dict(size=12, color='#2C3E50')
+    )
+
+    fig.show()
+
+print("\n✅ PART 2A COMPLETE - Continue to next section...")
+
+
+
+
+
+
+# =============================================================================
+# 🏨 HOTEL BOOKINGS ANALYSIS - PART 2B: ADVANCED VISUALIZATIONS
+# Continuing Comprehensive EDA - Sections D, E, F
+# =============================================================================
+
+
+print("🏨 HOTEL BOOKINGS ANALYSIS - PART 2B")
+print("📊 Advanced Interactive Visualizations (Continued)")
+
+
+# =============================================================================
+# SECTION D: MARKET & DISTRIBUTION ANALYSIS
+# =============================================================================
+
+print("📊 SECTION D: MARKET & DISTRIBUTION ANALYSIS")
+
+# -----------------------------------------------------------------------------
+# D.1 Market Segment Distribution
+# -----------------------------------------------------------------------------
+print("1️⃣4️⃣ Market Segment Distribution")
+print("-"*80)
+
+market_segments = df_clean['market_segment'].value_counts()
+print(market_segments)
+print()
+
+fig = go.Figure(go.Funnel(
+    y=market_segments.index,
+    x=market_segments.values,
+    textinfo='value+percent initial',
+    marker=dict(
+        color=['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#1ABC9C'],
+        line=dict(color='white', width=2)
+    ),
+    hovertemplate='<b>%{y}</b><br>Bookings: %{x:,}<br>%{percentInitial}<extra></extra>'
+))
+
+fig.update_layout(
+    title={
+        'text': '📊 Market Segment Distribution<br><sub>Booking Sources and Channels</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    height=600,
+    paper_bgcolor='white',
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# D.2 Cancellation Rate by Market Segment
+# -----------------------------------------------------------------------------
+print("\n1️⃣5️⃣ Cancellation Rate by Market Segment")
+print("-"*80)
+
+cancel_by_segment = df_clean.groupby('market_segment')['is_canceled'].mean() * 100
+cancel_by_segment = cancel_by_segment.sort_values(ascending=True)
+print(cancel_by_segment)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        y=cancel_by_segment.index,
+        x=cancel_by_segment.values,
+        orientation='h',
+        text=cancel_by_segment.values,
+        texttemplate='%{text:.1f}%',
+        textposition='outside',
+        marker=dict(
+            color=cancel_by_segment.values,
+            colorscale='RdYlGn_r',
+            showscale=True,
+            colorbar=dict(title='Cancel %'),
+            line=dict(color='#2C3E50', width=1.5)
+        ),
+        hovertemplate='<b>%{y}</b><br>Cancellation Rate: %{x:.1f}%<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '❌ Cancellation Rate by Market Segment<br><sub>Risk Analysis Across Different Booking Channels</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Cancellation Rate (%)',
+    yaxis_title='Market Segment',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# D.3 Distribution Channel Analysis
+# -----------------------------------------------------------------------------
+print("\n1️⃣6️⃣ Distribution Channel Analysis")
+print("-"*80)
+
+distribution_channels = df_clean['distribution_channel'].value_counts()
+print(distribution_channels)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        y=distribution_channels.index,
+        x=distribution_channels.values,
+        orientation='h',
+        text=distribution_channels.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=['#3498DB', '#E74C3C', '#2ECC71'],
+            line=dict(color='#2C3E50', width=1.5)
+        ),
+        hovertemplate='<b>%{y}</b><br>Bookings: %{x:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '📡 Bookings by Distribution Channel<br><sub>Channel Performance Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Bookings',
+    yaxis_title='Distribution Channel',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+
+
+
+
+# -----------------------------------------------------------------------------
+# E.1 Lead Time Distribution
+# -----------------------------------------------------------------------------
+print("1️⃣7️⃣ Lead Time Distribution")
+print("-"*80)
+
+lead_time_stats = df_clean['lead_time'].describe()
+print(lead_time_stats)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Histogram(
+    x=df_clean['lead_time'],
+    nbinsx=50,
+    name='Distribution',
+    marker=dict(color='#9B59B6', line=dict(color='white', width=1)),
+    opacity=0.7,
+    hovertemplate='Lead Time: %{x} days<br>Count: %{y}<extra></extra>'
+))
+
+fig.add_vline(
+    x=df_clean['lead_time'].median(),
+    line_dash='dash',
+    line_color='#E74C3C',
+    line_width=3,
+    annotation_text=f"Median: {df_clean['lead_time'].median():.0f} days",
+    annotation_position='top right'
+)
+
+fig.update_layout(
+    title={
+        'text': '⏰ Lead Time Distribution<br><sub>Booking Advance Window Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Lead Time (Days)',
+    yaxis_title='Frequency',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    showlegend=False,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# E.2 Lead Time Categories Distribution
+# -----------------------------------------------------------------------------
+print("\n1️⃣8️⃣ Lead Time Categories Distribution")
+print("-"*80)
+
+lead_time_categories = df_clean['lead_time_category'].value_counts()
+print(lead_time_categories)
+print()
+
+# Reorder categories
+category_order = ['Last Minute (0-30)', 'Short (31-90)', 'Medium (91-180)', 'Long (180+)']
+lead_time_cat_ordered = lead_time_categories.reindex(category_order)
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=lead_time_cat_ordered.index,
+        y=lead_time_cat_ordered.values,
+        text=lead_time_cat_ordered.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=['#2ECC71', '#F39C12', '#E67E22', '#E74C3C'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '📅 Booking Lead Time Categories<br><sub>Distribution by Booking Window</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Lead Time Category',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# E.3 Cancellation Rate by Lead Time Category
+# -----------------------------------------------------------------------------
+print("\n1️⃣9️⃣ Cancellation Rate by Lead Time Category")
+print("-"*80)
+
+cancel_by_lead_time = df_clean.groupby('lead_time_category')['is_canceled'].mean() * 100
+cancel_by_lead_time = cancel_by_lead_time.reindex(category_order)
+print(cancel_by_lead_time)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=category_order,
+        y=cancel_by_lead_time.values,
+        text=cancel_by_lead_time.values,
+        texttemplate='%{text:.1f}%',
+        textposition='outside',
+        marker=dict(
+            color=['#2ECC71', '#F39C12', '#E67E22', '#E74C3C'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Cancellation Rate: %{y:.1f}%<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '⏰ Cancellation Rate by Booking Window<br><sub>Impact of Lead Time on Cancellations</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Lead Time Category',
+    yaxis_title='Cancellation Rate (%)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# E.4 Lead Time by Cancellation Status
+# -----------------------------------------------------------------------------
+print("\n2️⃣0️⃣ Average Lead Time by Cancellation Status")
+print("-"*80)
+
+lead_time_cancel = df_clean.groupby('is_canceled')['lead_time'].mean()
+print(lead_time_cancel)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=['Not Canceled', 'Canceled'],
+        y=lead_time_cancel.values,
+        text=lead_time_cancel.values,
+        texttemplate='%{text:.0f} days',
+        textposition='outside',
+        marker=dict(
+            color=[COLORS['cancel_no'], COLORS['cancel_yes']],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Avg Lead Time: %{y:.0f} days<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '⏰ Average Lead Time by Cancellation Status<br><sub>Booking Window Comparison</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Cancellation Status',
+    yaxis_title='Average Lead Time (Days)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+
+
+
+
+
+
+
+# =============================================================================
+# SECTION F: REVENUE & PRICING ANALYSIS
+# =============================================================================
+
+print("\n" + "="*80)
+print("💰 SECTION F: REVENUE & PRICING ANALYSIS")
+print("="*80 + "\n")
+
+# -----------------------------------------------------------------------------
+# F.1 ADR Distribution by Hotel Type
+# -----------------------------------------------------------------------------
+print("2️⃣1️⃣ ADR Distribution by Hotel Type")
+print("-"*80)
+
+adr_stats = df_clean.groupby('hotel')['adr'].describe()
+print(adr_stats)
+print()
+
+fig = go.Figure()
+
+for hotel in df_clean['hotel'].unique():
+    hotel_data = df_clean[df_clean['hotel'] == hotel]
+
+    fig.add_trace(go.Box(
+        y=hotel_data['adr'],
+        name=hotel,
+        marker=dict(
+            color=COLORS['hotel1'] if hotel == 'City Hotel' else COLORS['hotel2']
+        ),
+        boxmean='sd',
+        hovertemplate='<b>%{x}</b><br>ADR: €%{y:.2f}<extra></extra>'
+    ))
+
+fig.update_layout(
+    title={
+        'text': '💰 ADR Distribution by Hotel Type<br><sub>Price Comparison Across Properties</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Hotel Type',
+    yaxis_title='Average Daily Rate (€)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# F.2 ADR by Customer Type
+# -----------------------------------------------------------------------------
+print("\n2️⃣2️⃣ ADR by Customer Type")
+print("-"*80)
+
+adr_by_customer = df_clean.groupby('customer_type')['adr'].mean().sort_values(ascending=False)
+print(adr_by_customer)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=adr_by_customer.index,
+        y=adr_by_customer.values,
+        text=adr_by_customer.values,
+        texttemplate='€%{text:.0f}',
+        textposition='outside',
+        marker=dict(
+            color=['#3498DB', '#9B59B6', '#E67E22', '#1ABC9C'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Avg ADR: €%{y:.2f}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '💵 Average Daily Rate by Customer Type<br><sub>Pricing Segmentation Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Customer Type',
+    yaxis_title='Average Daily Rate (€)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# F.3 Revenue by Hotel Type
+# -----------------------------------------------------------------------------
+print("\n2️⃣3️⃣ Total Revenue by Hotel Type")
+print("-"*80)
+
+revenue_by_hotel = df_clean.groupby('hotel')['revenue'].sum()
+print(revenue_by_hotel)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=revenue_by_hotel.index,
+        y=revenue_by_hotel.values,
+        text=revenue_by_hotel.values,
+        texttemplate='€%{text:.2s}',
+        textposition='outside',
+        marker=dict(
+            color=[COLORS['hotel1'], COLORS['hotel2']],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Total Revenue: €%{y:,.0f}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '💰 Total Revenue by Hotel Type<br><sub>Revenue Contribution Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Hotel Type',
+    yaxis_title='Total Revenue (€)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+
+
+
+
+
+
+
+
+
+
+# =============================================================================
+# SECTION G: SERVICES & AMENITIES ANALYSIS
+# =============================================================================
+
+print("\n" + "="*80)
+print("🛎️ SECTION G: SERVICES & AMENITIES ANALYSIS")
+print("="*80 + "\n")
+
+# -----------------------------------------------------------------------------
+# G.1 Special Requests Distribution
+# -----------------------------------------------------------------------------
+print("2️⃣4️⃣ Special Requests Distribution")
+print("-"*80)
+
+special_requests = df_clean['total_of_special_requests'].value_counts().sort_index()
+print(special_requests)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=special_requests.index,
+        y=special_requests.values,
+        text=special_requests.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(color='#E67E22', line=dict(color='#2C3E50', width=2)),
+        hovertemplate='<b>%{x} Requests</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🛎️ Distribution of Special Requests<br><sub>Guest Service Preferences</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Special Requests',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.2 Special Requests Impact on Cancellation
+# -----------------------------------------------------------------------------
+print("\n2️⃣5️⃣ Special Requests Impact on Cancellation")
+print("-"*80)
+
+special_vs_cancel = df_clean.groupby('total_of_special_requests')['is_canceled'].mean() * 100
+print(special_vs_cancel)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=special_vs_cancel.index,
+    y=special_vs_cancel.values,
+    mode='lines+markers+text',
+    line=dict(color='#8E44AD', width=4),
+    marker=dict(size=12, color='#F39C12', line=dict(color='white', width=2)),
+    text=special_vs_cancel.values,
+    texttemplate='%{text:.1f}%',
+    textposition='top center',
+    hovertemplate='<b>%{x} Requests</b><br>Cancellation Rate: %{y:.1f}%<extra></extra>'
+))
+
+fig.update_layout(
+    title={
+        'text': '🛎️ Cancellation Rate by Number of Special Requests<br><sub>Guest Engagement Impact Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Special Requests',
+    yaxis_title='Cancellation Rate (%)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.3 Parking Space Requirements
+# -----------------------------------------------------------------------------
+print("\n2️⃣6️⃣ Car Parking Space Requirements")
+print("-"*80)
+
+parking_spaces = df_clean['required_car_parking_spaces'].value_counts().sort_index()
+print(parking_spaces)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=parking_spaces.index,
+        y=parking_spaces.values,
+        text=parking_spaces.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(color='#8E44AD', line=dict(color='#2C3E50', width=2)),
+        hovertemplate='<b>%{x} Spaces</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🚗 Car Parking Space Requirements<br><sub>Parking Demand Analysis</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Parking Spaces',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.4 Meal Plan Preferences
+# -----------------------------------------------------------------------------
+print("\n2️⃣7️⃣ Meal Plan Preferences")
+print("-"*80)
+
+meal_preferences = df_clean['meal_type'].value_counts()
+print(meal_preferences)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        y=meal_preferences.index,
+        x=meal_preferences.values,
+        orientation='h',
+        text=meal_preferences.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=['#3498DB', '#2ECC71', '#E74C3C', '#F39C12', '#9B59B6'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{y}</b><br>Bookings: %{x:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '🍽️ Meal Plan Preferences<br><sub>Guest Dining Choices Distribution</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Number of Bookings',
+    yaxis_title='Meal Plan',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.5 Deposit Type Distribution
+# -----------------------------------------------------------------------------
+print("\n2️⃣8️⃣ Deposit Type Distribution")
+print("-"*80)
+
+deposit_types = df_clean['deposit_type'].value_counts()
+print(deposit_types)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=deposit_types.index,
+        y=deposit_types.values,
+        text=deposit_types.values,
+        texttemplate='%{text:,}',
+        textposition='outside',
+        marker=dict(
+            color=['#1ABC9C', '#E74C3C', '#F39C12'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Bookings: %{y:,}<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '💳 Deposit Type Distribution<br><sub>Payment Policy Breakdown</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Deposit Type',
+    yaxis_title='Number of Bookings',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.6 Deposit Type Impact on Cancellation
+# -----------------------------------------------------------------------------
+print("\n2️⃣9️⃣ Deposit Type Impact on Cancellation")
+print("-"*80)
+
+deposit_cancel = df_clean.groupby('deposit_type')['is_canceled'].mean() * 100
+print(deposit_cancel)
+print()
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=deposit_cancel.index,
+        y=deposit_cancel.values,
+        text=deposit_cancel.values,
+        texttemplate='%{text:.1f}%',
+        textposition='outside',
+        marker=dict(
+            color=['#2ECC71', '#E74C3C', '#F39C12'],
+            line=dict(color='#2C3E50', width=2)
+        ),
+        hovertemplate='<b>%{x}</b><br>Cancellation Rate: %{y:.1f}%<extra></extra>'
+    )
+])
+
+fig.update_layout(
+    title={
+        'text': '💳 Cancellation Rate by Deposit Type<br><sub>Critical: Non-Refund has HIGHEST cancellation!</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Deposit Type',
+    yaxis_title='Cancellation Rate (%)',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+# -----------------------------------------------------------------------------
+# G.7 Stay Duration Distribution
+# -----------------------------------------------------------------------------
+print("\n3️⃣0️⃣ Stay Duration Distribution")
+print("-"*80)
+
+stay_stats = df_clean['total_nights'].describe()
+print(stay_stats)
+print()
+
+fig = go.Figure()
+
+fig.add_trace(go.Histogram(
+    x=df_clean[df_clean['total_nights'] <= 14]['total_nights'],
+    nbinsx=15,
+    marker=dict(color='#16A085', line=dict(color='white', width=1)),
+    opacity=0.7,
+    hovertemplate='Nights: %{x}<br>Count: %{y}<extra></extra>'
+))
+
+fig.add_vline(
+    x=df_clean['total_nights'].median(),
+    line_dash='dash',
+    line_color='#E74C3C',
+    line_width=3,
+    annotation_text=f"Median: {df_clean['total_nights'].median():.0f} nights",
+    annotation_position='top right'
+)
+
+fig.update_layout(
+    title={
+        'text': '🛏️ Distribution of Stay Duration (≤14 nights)<br><sub>Guest Stay Length Patterns</sub>',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 22, 'color': '#2C3E50', 'family': 'Arial Black'}
+    },
+    xaxis_title='Total Nights',
+    yaxis_title='Frequency',
+    plot_bgcolor='#F8F9FA',
+    paper_bgcolor='white',
+    height=500,
+    showlegend=False,
+    font=dict(size=12, color='#2C3E50')
+)
+
+fig.show()
+
+print("✅ PART 2B COMPLETE!")
+print("📊 Total Interactive Visualizations Created: 30+")
+print("\nNext: Part 3 - Interactive Widgets, Statistical Analysis & Insights")
+

@@ -1,0 +1,436 @@
+
+This is all the PakWheels_Pakistan_Automobile_Dataset information.
+My objective is the best possible accuracy. I am giving you information one by one.
+now when you get information, only say, "Yes, I got it and understand it." When I say, "Now build a project," you start the project on the dataset.
+The information is starting.  
+
+React as a senior data scientist and engineer. Give me the best of the best codes. After all the code I gave you, 
+The output of the result is then based on this, and you improve the code and notebook. Use the advanced methods for 
+dealing with preprocessing and analysis for doing this.
+I am doing this for my portfolio. Do it; I only need the result for the portfolio
+First, tell me which method you're using, then i say then start the project
+remember that not using machine learning and deep learning it is data analysis project 
+This is all the PakWheels_Pakistan_Automobile_Dataset information.
+
+My objective is the best aleat data analysis. I am giving you information one by one.
+now when you get information, only say, "Yes, I got it and understand it." When I say, "Now build a project," you start the project on the dataset.
+The information is starting.  
+ My objective is accurate analysis.
+ now when you got information, only say yes, 
+
+I get and understand it when I say, "Now build a project," and then you start the project on the dataset. The information is starting.
+
+
+
+  
+
+
+df.head()
+
+
+	title	price	city	model	mileage	fuel_type	transmission	registered	color	assembly	engine_capacity	post_date	price_category	mileage_category	post_day_of_week	vehicle_age
+0	Honda N One Premium 2014	2650000	Lahore	2014	82000	Petrol	Automatic	Lahore	Blue	Imported	660	2024-05-04	Medium	Medium	Saturday	10
+1	Nissan Note 2020	5400000	Lahore	2020	59000	Hybrid	Automatic	Un-Registered	Silver	Imported	1200	2024-05-04	High	Medium	Saturday	4
+2	Suzuki Vitara GLX 1.6 2017	0	Karachi	2017	67000	Petrol	Automatic	Karachi	Grey	Imported	1600	2024-05-04	Low	Medium	Saturday	7
+3	Toyota Yaris Cross 2021	7850000	Lahore	2021	41000	Hybrid	Automatic	Un-Registered	Beige	Imported	1500	2024-05-04	High	Low	Saturday	3
+4	BMW X1 sDrive18i 2017	10700000	Islamabad	2017	37000	Petrol	Automatic	Islamabad	White	Imported	1500	2024-05-04	High	Low	Saturday	7
+
+
+
+
+
+
+df.info()
+
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 48189 entries, 0 to 48188
+Data columns (total 16 columns):
+ #   Column            Non-Null Count  Dtype 
+---  ------            --------------  ----- 
+ 0   title             48189 non-null  object
+ 1   price             48189 non-null  int64 
+ 2   city              48189 non-null  object
+ 3   model             48189 non-null  int64 
+ 4   mileage           48189 non-null  int64 
+ 5   fuel_type         48189 non-null  object
+ 6   transmission      48189 non-null  object
+ 7   registered        48189 non-null  object
+ 8   color             48189 non-null  object
+ 9   assembly          48189 non-null  object
+ 10  engine_capacity   48189 non-null  int64 
+ 11  post_date         48189 non-null  object
+ 12  price_category    48189 non-null  object
+ 13  mileage_category  48189 non-null  object
+ 14  post_day_of_week  48189 non-null  object
+ 15  vehicle_age       48189 non-null  int64 
+dtypes: int64(5), object(11)
+memory usage: 5.9+ MB
+
+
+
+display(df.describe(include='all').T)
+
+
+
+count	unique	top	freq	mean	std	min	25%	50%	75%	max
+title	48189	7349	Honda Civic Oriel 1.8 i-VTEC CVT 2018	319	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+price	48189.0	NaN	NaN	NaN	4300610.736454	6285591.842104	0.0	1689999.0	3000000.0	4750000.0	175000000.0
+city	48189	312	Lahore	10776	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+model	48189.0	NaN	NaN	NaN	2013.690074	7.511492	1990.0	2008.0	2016.0	2020.0	2024.0
+mileage	48189.0	NaN	NaN	NaN	90444.885327	85300.588856	1.0	36000.0	79192.0	122456.0	1000000.0
+fuel_type	48189	4	Petrol	41818	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+transmission	48189	3	Automatic	29079	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+registered	48189	95	Islamabad	11457	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+color	48189	809	White	12878	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+assembly	48189	3	Local	30481	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+engine_capacity	48189.0	NaN	NaN	NaN	1417.805038	715.792743	100.0	1000.0	1300.0	1600.0	15000.0
+post_date	48189	31	2024-05-03	4917	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+price_category	48189	3	Low	16223	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+mileage_category	48189	3	Low	16332	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+post_day_of_week	48189	7	Wednesday	9329	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+vehicle_age	48189.0	NaN	NaN	NaN	10.309926	7.511492	0.0	4.0	8.0	16.0	34.0
+
+
+
+
+# Check for Unique values count
+for col in df.columns:
+    print(f"Unique values count in {col}:")
+    print(df[col].value_counts(), "\n")
+
+
+
+
+Unique values count in title:
+title
+Honda Civic Oriel 1.8 i-VTEC CVT 2018    319
+Honda Civic Oriel 1.8 i-VTEC CVT 2017    288
+Honda Civic Oriel 1.8 i-VTEC CVT 2021    265
+Suzuki Alto VXR 2022                     236
+Suzuki Mehran VXR Euro II 2018           215
+                                        ... 
+Toyota Hiace 1992                          1
+Honda Cross Road 2009                      1
+Toyota Belta X S Package 1.0 2009          1
+Toyota Vitz iLL 1.5 2005                   1
+Jeep M 151 1989                            1
+Name: count, Length: 7349, dtype: int64 
+
+Unique values count in price:
+price
+0          496
+3500000    447
+2500000    413
+3000000    384
+3800000    359
+          ... 
+3699000      1
+1197000      1
+4169000      1
+9790000      1
+1479000      1
+Name: count, Length: 2059, dtype: int64 
+
+Unique values count in city:
+city
+Lahore                10776
+Karachi                9173
+Islamabad              7777
+Rawalpindi             3091
+Peshawar               2186
+                      ...  
+Ludhan                    1
+Chak 46                   1
+Chowha saidan shah        1
+Rato dero                 1
+Warah                     1
+Name: count, Length: 312, dtype: int64 
+
+Unique values count in model:
+model
+2021    4343
+2022    3534
+2018    3525
+2020    3382
+2017    2755
+2019    2704
+2015    2239
+2014    2156
+2016    2141
+2007    1906
+2013    1847
+2012    1756
+2006    1624
+2011    1503
+2005    1445
+2023    1356
+2010    1344
+2008    1224
+2004     990
+2009     928
+2003     747
+2024     586
+2002     518
+2000     481
+1996     431
+2001     403
+1998     355
+1999     346
+1997     307
+1995     289
+1994     270
+1993     253
+1992     218
+1991     142
+1990     141
+Name: count, dtype: int64 
+
+Unique values count in mileage:
+mileage
+100000    1861
+150000    1089
+200000     898
+80000      705
+90000      619
+          ... 
+28489        1
+7407         1
+46088        1
+18664        1
+82924        1
+Name: count, Length: 7396, dtype: int64 
+
+Unique values count in fuel_type:
+fuel_type
+Petrol           41818
+Hybrid            3700
+Diesel            1880
+Not Available      791
+Name: count, dtype: int64 
+
+Unique values count in transmission:
+transmission
+Automatic        29079
+Not Available    19109
+Manual               1
+Name: count, dtype: int64 
+
+Unique values count in registered:
+registered
+Islamabad      11457
+Lahore         10582
+Punjab          6217
+Karachi         6166
+Sindh           6135
+               ...  
+Khushab            1
+Sibi               1
+Jaranwala          1
+Swatmingora        1
+Dunia Pur          1
+Name: count, Length: 95, dtype: int64 
+
+Unique values count in color:
+color
+White                   12878
+Silver                   4976
+Black                    4421
+Grey                     2496
+Solid White              2293
+                        ...  
+Metallic Dark Purple        1
+Night Blacl                 1
+Blue Ridge Mountain         1
+Red Multi Coat              1
+Bule                        1
+Name: count, Length: 809, dtype: int64 
+
+Unique values count in assembly:
+assembly
+Local            30481
+Imported         17695
+Not Available       13
+Name: count, dtype: int64 
+
+Unique values count in engine_capacity:
+engine_capacity
+1300     8329
+1000     7548
+1500     6245
+660      5575
+1800     5527
+         ... 
+12548       1
+7500        1
+900         1
+747         1
+2171        1
+Name: count, Length: 146, dtype: int64 
+
+Unique values count in post_date:
+post_date
+2024-05-03    4917
+2024-05-01    4226
+2024-05-02    3919
+2024-04-29    2888
+2024-04-30    2778
+2024-04-28    2376
+2024-04-27    2246
+2024-04-25    1862
+2024-04-24    1803
+2024-04-26    1749
+2024-04-23    1742
+2024-04-22    1725
+2024-04-21    1573
+2024-05-08    1546
+2024-04-20    1486
+2024-04-18    1483
+2024-04-17    1414
+2024-04-19    1413
+2024-04-16    1357
+2024-04-15    1255
+2024-04-14    1057
+2024-04-13     863
+2024-04-12     711
+2024-04-11     539
+2024-05-09     386
+2024-04-10     327
+2024-04-09     324
+2024-05-04     189
+2024-04-08      30
+2024-04-06       4
+2024-04-07       1
+Name: count, dtype: int64 
+
+Unique values count in price_category:
+price_category
+Low       16223
+Medium    16040
+High      15926
+Name: count, dtype: int64 
+
+Unique values count in mileage_category:
+mileage_category
+Low       16332
+High      16012
+Medium    15845
+Name: count, dtype: int64 
+
+Unique values count in post_day_of_week:
+post_day_of_week
+Wednesday    9329
+Friday       8777
+Thursday     8189
+Tuesday      6201
+Monday       5898
+Sunday       5007
+Saturday     4788
+Name: count, dtype: int64 
+
+Unique values count in vehicle_age:
+vehicle_age
+3     4343
+2     3534
+6     3525
+4     3382
+7     2755
+5     2704
+9     2239
+10    2156
+8     2141
+17    1906
+11    1847
+12    1756
+18    1624
+13    1503
+19    1445
+1     1356
+14    1344
+16    1224
+20     990
+15     928
+21     747
+0      586
+22     518
+24     481
+28     431
+23     403
+26     355
+25     346
+27     307
+29     289
+30     270
+31     253
+32     218
+33     142
+34     141
+Name: count, dtype: int64 
+
+
+
+# Identify outliers using for loop by using Z-Score
+for col in df.select_dtypes(include=['float64', 'int64']).columns:
+    z_scores = (df[col] - df[col].mean()) / df[col].std()
+    outliers = df[np.abs(z_scores) > 3]
+    print(f"Outliers in {col}:")
+    print(outliers, "\n")
+
+
+
+[708 rows x 16 columns] 
+
+Outliers in vehicle_age:
+                                          title    price        city  model  \
+22                             Suzuki Alto 1991   295000   Charsadda   1991   
+855                     Toyota Cressida GL 1991  3500000      Lahore   1991   
+1353                            Jeep M 151 1990  2600000     Karachi   1990   
+1932                     Mitsubishi Lancer 1990   395000     Karachi   1990   
+2556                         Toyota Allion 1991  1300000       Kamra   1991   
+...                                         ...      ...         ...    ...   
+47312                         Nissan Sunny 1990   630000  Abbottabad   1990   
+47472  Toyota Land Cruiser VX Limited 4.2D 1990  4500000     Karachi   1990   
+47737                    Suzuki Mehran VXR 1991   430000   Islamabad   1991   
+47752                    Suzuki Mehran VXR 1990   450000     Karachi   1990   
+47794                  Toyota Land Cruiser 1991  2150000        Swat   1991   
+
+       mileage fuel_type transmission registered     color  assembly  \
+22      200000       NaN          NaN     Lahore       red     Local   
+855     125000    Petrol    Automatic  Islamabad     white  Imported   
+1353       100    Diesel          NaN      Sindh      grey  Imported   
+1932    100000    Petrol          NaN      Sindh     black     Local   
+2556     50000    Petrol    Automatic  Islamabad     white     Local   
+...        ...       ...          ...        ...       ...       ...   
+47312   533000    Petrol          NaN     Lahore     white  Imported   
+47472   206000    Diesel    Automatic     Lahore  unlisted  Imported   
+47737      430    Petrol          NaN     Lahore    maroon     Local   
+47752   150000       NaN          NaN      Sindh     white  Imported   
+47794   300000    Diesel          NaN     Lahore      blue  Imported   
+
+       engine_capacity  post_date price_category mileage_category  \
+22                 660 2024-05-04            Low             High   
+855               3000 2024-05-03         Medium             High   
+1353              2000 2024-05-03         Medium              Low   
+1932              1300 2024-05-03            Low           Medium   
+2556              1500 2024-05-03            Low              Low   
+...                ...        ...            ...              ...   
+47312             1000 2024-04-10            Low             High   
+47472             4200 2024-04-10           High             High   
+47737              800 2024-04-09            Low              Low   
+47752              800 2024-04-09            Low             High   
+47794             2800 2024-04-09            Low             High   
+
+      post_day_of_week  vehicle_age  
+22            Saturday           33  
+855             Friday           33  
+1353            Friday           34  
+1932            Friday           34  
+2556            Friday           33  
+...                ...          ...  
+47312        Wednesday           34  
+47472        Wednesday           34  
+47737          Tuesday           33  
+47752          Tuesday           34  
+47794          Tuesday           33  
+
+[283 rows x 16 columns] 
