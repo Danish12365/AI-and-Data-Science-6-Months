@@ -1,3 +1,29 @@
+
+
+
+# in mathematics, "brackets" is a general term for a family of symbols used to group numbers or operations.
+# The most common types are: 
+# Parentheses ( ): Also known as round brackets or common brackets. 
+# They are the most frequently used and typically the first level of grouping in an expression.
+# Square Brackets [ ]: Often called box brackets. 
+# These are generally used for the second level of grouping (nested expressions) or to represent matrices and intervals.
+# Braces { }: Commonly called curly brackets or squiggly brackets.
+#  In math, they are primarily used to define sets or as the third level of nested grouping.
+# Angle Brackets ⟨ ⟩: Also known as chevrons or pointed brackets.
+# These are typically found in advanced mathematics to represent vectors or inner products
+
+
+# Order of Operations
+# When multiple types of brackets appear in one problem, you solve them from the innermost to the outermost.
+#  A standard convention for nesting is:
+# { [ ( ) ] } 
+# Parentheses ( ): Solved first.
+# Square Brackets [ ]: Solved second.
+# Braces { }: Solved third. 
+
+
+
+
 # data structures
 # list
 
