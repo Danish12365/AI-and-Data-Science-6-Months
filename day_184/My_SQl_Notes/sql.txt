@@ -1,0 +1,821 @@
+https://www.w3schools.com/sql
+
+Some of The Most Important SQL Commands
+SELECT - extracts data from a database
+UPDATE - updates data in a database
+DELETE - deletes data from a database
+INSERT INTO - inserts new data into a database
+CREATE DATABASE - creates a new database
+ALTER DATABASE - modifies a database
+CREATE TABLE - creates a new table
+ALTER TABLE - modifies a table
+DROP TABLE - deletes a table
+CREATE INDEX - creates an index (search key)
+DROP INDEX - deletes an index
+
+
+Field called "COLUMNS" and recordes called "Rows"  in MYSQL database.
+
+MY SQL commands................................................................................................... 
+
+(1) mysql --version
+
+(2) mysql -u root -p
+
+(3) show databases;
+
+(4) CREATE database danishDB;
+
+(5) use danishdb;                                         ( To use a dtabase )
+
+How to create/modify tables in mySQL | in Hindi/Urdu | Part-5.........................................
+
+(6) show tables;
+
+    (Table name is case sensetive)
+(7) create table students (
+     stuid int,
+     stuname varchar(45),
+     stuage int,
+     stucity varchar(50));
+
+(8) DESC students;                               (see the table structure)
+
+(ADD ROWS ).......................................
+
+(9) INSERT INTO students(stuid, stuname, stuage, stucity) VALUES(1,'HAMZA', 24, 'FASILABAD');
+
+(10) SELECT * FROM STUDENTS;
+
+(CHACK STUDENTS NAME ONLY)
+(11) SELECT STUNAME FROM STUDENTS;
+(12) SELECT STUAGE FROM STUDENTS;
+
+(13) SELECT STUAGE FROM STUDENTS WHERE STUAGE <30;
+
+(FROM ALL STUDENTS DATA)
+(14) SELECT * FROM STUDENTS WHERE STUAGE <30;
+
+(add column in the table)
+(15) alter table students add column stucountry text;
+
+(16) update students set stucountry = "pakistan" where stuid=1;
+(17) update students set stucountry = "pakistan" where stuage>30;
+(18) update students set stucountry = "" where stuage>30;
+
+(19) delete from students where stucountry ="";
+(20) delete from students where stucountry is null;
+
+how to alter table?.........................
+
+(21) Alter table students
+add email varchar(100)
+after stuage;
+
+
+(22) Alter table students drop email; 
+
+
+( change column name)
+(23) Alter table students
+change stuage
+stu_umar varchar(100);
+
+DISTINCT function in mySQL | in Hindi/Urdu | Part-6.................................................
+
+
+select * from students where stuAGE = 22;
+        
+select distinct stuAGE from students;                (for seeing unique valuies in coiumns)
+
+select stuAGE, count(*) from students group by stuAGE;                     (how maney time accurerence a thing command  in field in mysql)
+
+
+
+Constraints(رکاوٹوں) in mySQL | mySQL in Hindi/Urdu | Part-7....(A constraint is a limit or restriction)...............................................................
+
+
+create table codanians(
+    stuID int not null,
+    stuName varchar(50),
+    stuAge int);
+
+alter table school modify stuage int not null;
+ALTER TABLE students MODIFY COLUMN stuid INT NOT NULL UNIQUE;
+
+drop table students;                                                                 ( to delete the table)
+
+create table students(                                                             
+stuID int not null unique,                                (primery key means unique or not null)
+stuName varchar(50),
+stuAGE int);
+                                                                              
+create table students(                                    ( we can creat table for unique valuues in this way)                             
+stuID int not null,
+stuName varchar(50),
+stuAGE int,
+unique (stuid)                                               
+);
+
+Alter table students modify stuage int not null;                 (modify stuage in to null)
+Alter table students modify stuage int unique;  
+Alter table students modify stuage int not null unique;
+
+Assighnment:( how to convert it in primary key)
+
+ ALTER TABLE students2 MODIFY COLUMN stuAGE VARCHAR(50) primary key;
+
+ALTER TABLE students
+MODIFY COLUMN stuAGE INT NOT NULL,
+ADD PRIMARY KEY (stuAGE);
+
+alter table students add unique (stuAGE);
+
+alter table students drop index stuid;                    ( to drop key value)
+
+
+(constraint the combination should be uniqe)
+CREATE table temp1(
+id int,
+name varchar(50),
+age int,
+city varchar(50),
+primary key (id)
+);
+
+
+CREATE table temp(
+id int,
+salary int default 25000);
+
+
+insert into emp (id) values (101);
+
+
+create table students(
+stuID int not null,
+stuNAME varchar(5) not null,
+stuAGE int,
+constraint students primary key (stuID, stuNAME)
+);
+
+(to join two columns (Foreign keys))............
+create table orders(
+orderID int not null,
+orderNUM int not null,
+customerID int,
+primary key (orderID),
+foreign key (customerID) references orders(orderID)
+);                                                                                                
+
+
+(to add data of adults)
+create table students(
+stuId int not null,
+stuNAME varchar(50),
+stuAGE int,
+check (stuAGE>=18)
+);
+
+
+insert into students(stuID, stuNAME, stuAGE) values (3, 'Naveed', 17);
+
+(chack).....................................
+CREATE TABLE students (
+    stuID INT NOT NULL,
+    stuNAME VARCHAR(50),
+    stuAGE INT,
+    stuCITY VARCHAR(255),
+    CONSTRAINT check_age_city CHECK (stuAGE >= 18 AND stuCITY = 'Multan')
+);
+
+
+(Default)...................( how to named as default city multan)
+create table students(
+stuID int not null,
+stuNAME varchar(50),
+stuAGE int,
+stuCITY varchar(50) default 'Multan'
+);
+
+(multiple default constraints)
+CREATE TABLE students (
+    stuID INT NOT NULL,
+    stuNAME VARCHAR(50) DEFAULT 'John Doe',
+    stuAGE INT DEFAULT 18,
+    stuCITY VARCHAR(50) DEFAULT 'Multan'
+);
+
+(To add multiple constraints to the CREATE TABLE statement, including default constraints, you can modify your example like this:)
+CREATE TABLE students (
+    stuID INT NOT NULL,
+    stuNAME VARCHAR(50),
+    stuAGE INT,
+    stuCITY VARCHAR(50) DEFAULT 'Multan',
+    CONSTRAINT pk_stuID PRIMARY KEY (stuID),
+    CONSTRAINT chk_stuAGE CHECK (stuAGE >= 18 AND stuAGE <= 30)
+);
+
+
+insert into students(stuID, stuNAME, stuAGE) values (3, 'Naveed', 18);
+insert into students(stuID, stuNAME, stuAGE) values (4, 'Kashif', 19);
+
+
+
+(INDEX)......................
+create index index_name on students (stuID, stuNAME, stuAGE, stuCITY);
+
+
+Auto increment in mySQL | mySQL in Hindi/Urdu | Part-8...........................................................................................................
+
+Auto increment-in mysql...............................
+
+create table students(
+stuID int not null Auto_increment,
+stuName varchar(255),
+stuAge int,
+Primary key (stuID)
+);
+
+insert into students (stuNAME, stuAGE) VALUES('Aammar', 22);
+insert into students (stuNAME, stuAGE) VALUES('Ahmad', 23);
+ insert into students (stuNAME, stuAGE) VALUES('Naveed', 25);
+
+ select * from students where stuAGE > 22;
+
+DELETE FROM students
+WHERE stuAge = 23;
+
+SET @increment_value = 0;
+UPDATE students
+SET stuID = (@increment_value := @increment_value+ 1);
+
+-- Step 1: Drop the existing stuID column
+ALTER TABLE students DROP COLUMN stuID;
+
+-- Step 2: Add a new stuID column as an auto-increment primary key
+ALTER TABLE students ADD COLUMN stuID INT AUTO_INCREMENT PRIMARY KEY;
+
+This approach ensures that the stuID column is reset to start from 1 and is automatically incremented for each new record added to the table. It also maintains referential integrity and avoids any potential issues associated with manually reassigning IDs.
+
+
+
+
+SELECT clause in mySQL | my SQL in Hindi/Urdu | Part-12,...................................................................................
+
+
+
+
+
+
+
+(hafin is use for commintout)
+use classicmodels;
+select customername,phone, city,state
+ from customers 
+-- where city = 'paris'
+order by customername;
+
+
+select *
+ from customers 
+ -- where city = 'paris'
+order by customername;
+
+
+select *
+ from customers 
+-- where city = 'paris'
+where customernumber = 103
+order by customername;
+
+
+Assighnment: Appley all clause  on  employees, offices, orderdetails, orders,  productlines, products creat csv file ans send me plotes all of them.
+
+
+use classicmodels;
+select employeeNumber, lastName , firstName , extension from employees
+where officecode = 6
+order by employeenumber ;
+
+
+
+
+use classicmodels;
+select * from employees
+where officecode = 6
+order by employeenumber ;
+
+
+use classicmodels;
+select officeCode, city, phone, state from offices
+where city = 'NYC' 
+order by officecode;
+
+
+
+use classicmodels;
+select * from offices
+where city = 'NYC' 
+order by officecode;
+
+
+select * from orderdetails
+where orderlinenumber = 3 
+order by ordernumber;
+
+
+
+select * from orders
+where customernumber = 121 
+order by ordernumber;
+
+ ( -- are use for commint out the code)
+select * from productlines
+where productLine = 'ships'
+--  order by ordernumber;
+
+
+
+select * from products
+where productLine = 'motorcycles'
+order by productcode;
+
+
+Data Manupulation in mySQL | my SQL in Hindi/Urdu | Part-13.......................................
+
+
+use classicmodels;
+select productname,
+	   productcode,
+                     buyprice,
+                    MSRP,
+                    MSRP * 1.2
+from products
+
+
+select productname,
+	   productcode,
+                     buyprice,
+	MSRP AS MSRP_OLD,
+        MSRP + 10 * 1.2 AS MSRP_NEW
+from products
+
+
+(The keyword DISTINCT ensures that only unique values are returned)
+select distinct buyPrice
+from products
+
+
+use classicmodels;
+select PRODUCTNAME,
+       PRODUCTCODE, 
+       buyPrice,
+       MSRP ,
+       MSRP + (MSRP *0.1) AS MSRP_JAN,
+       MSRP + (MSRP *0.2) AS MSRP_FEB,
+       MSRP + (MSRP *0.05) AS MSRP_MAR
+from products;
+
+
+
+WHERE clause and comparison operators | my SQL in Hindi/Urdu | Part-14...................................................
+
+
+select * 
+from customers
+where city = 'singapore';
+
+select * 
+from customers
+where city != 'singapore';
+
+select * 
+from customers
+where city <> 'singapore';
+
+
+select * 
+from customers
+where city <> 'Singapore'
+and contactLastName = 'Anton';
+
+
+select * 
+from customers
+where creditLimit < 21000
+and country = 'usa';
+
+
+AND OR NOT and IN | my SQL in Hindi/Urdu | Part-15............................................................
+
+
+
+SELECT * 
+FROM products
+where productLine > 'motorcycle';
+
+
+SELECT * 
+FROM products
+where productLine > 'motorcycle' 
+and buyPrice > 65;
+
+
+SELECT * 
+FROM products
+where productLine > 'motorcycle' 
+and buyPrice > 65 or MSRP > 100;
+
+
+SELECT * 
+FROM products
+where productLine = 'motorcycles' and not buyPrice > 65 and MSRP > 100;
+
+
+
+SELECT * 
+FROM products
+where productLine = 'motorcycles' or productLine = 'class cars' or MSRP > 65;
+
+
+
+SELECT * 
+FROM products
+where productLine in ('motorcycles', 'classic cars', 'Trucks and Buses');
+
+
+
+SELECT * 
+FROM products
+where productLine NOT in ('motorcycles', 'classic cars', 'Trucks and Buses');
+
+
+
+BETWEEN clause in mySQL | my SQL in Hindi/Urdu | Part-16.......................................................................
+
+select * 
+from products
+where quantityInStock >=100 and quantityInStock <= 500;
+
+(100 and 3000 are inculeded in between clause)
+select * 
+from products
+where quantityInStock between 100 and 3000;
+
+select * 
+from products
+where buyPrice between 33 and 100;
+
+
+
+
+In logic and mathematics, "either" is often used in conjunction with "or" to denote inclusive disjunction, meaning one or both options can be true.
+
+
+Concatenation Operator. ANSI SQL defines a concatenation operator (||), which joins two distinct strings into one string value.
+
+The symbol <> in MySQL is same as not equal to operator (!=). Both gives the result in boolean or tinyint(1). If the condition becomes true, then the result will be 1 otherwise 0.
+
+
+
+
+
+SQL - Complete Course in 3 Hours | SQL One Shot using MySQL.................................................................
+
+select  productLine, avg(productName)
+from products
+group by productLine
+order by productLine;
+
+
+select  productLine, avg(productName)
+from products
+group by productLine
+order by avg(productLine) DESC;
+
+(Having is use for Groupby function)
+select  productLine, count(productName)
+from products
+group by productLine
+having max(buyPrice) > 23;
+
+( For using safe mode off)
+SET SQL_SAFE_UPDATES = 0;
+
+( For using safe mode on)
+SET SQL_SAFE_UPDATES = 1;
+
+
+UPDATE products                                # Note: Be careful when updating records in a table! Notice the WHERE clause in the UPDATE statement. The WHERE clause specifies which record(s) that should be updated. If you omit the WHERE clause,                  all records in the table will be updated!
+set buyprice = "60"
+where productCode = 'S10_1678';
+
+
+UPDATE products
+set Grade = "B"
+where marks between 80 and 90;
+
+
+
+UPDATE student
+SET marks = marks +1;
+
+
+(Delete (to delete existing rows)
+DELETE FROM student
+WHERE markes < 33;
+
+
+create table DEPT (
+ID INT primary KEY,
+NAME varchar(50)
+);
+
+insert into dept
+values
+(101, "english"),
+(102, "IT");
+
+update dept
+set id = 111
+where id = 101;
+
+
+select * from dept;
+
+insert into teacher
+values
+(101,"Adam", 101),
+(102, "Eve", 102);
+
+
+select * from teacher;
+
+create TABLE teacher (
+id int primary key,
+name VARCHAR(50),
+DEPT_ID INT,
+foreign key (DEPT_ID) references DEPT(ID)
+on update cascade
+on delete cascade
+);
+
+
+
+CREATE database college;
+USE COLLEGE;
+
+CREATE TABLE STUDENT(
+rollno int primary key,
+NAME varchar(50),
+MARKS INT NOT NULL,
+GRADE varchar(1),
+CITY varchar(20)
+);
+
+
+INSERT INTO student
+(rollno, name, marks, grade, city)
+values
+(101, "Anil", 78, "C", "Pune"),
+(102, "Bhumka", 93, "A", "MUmbai"),
+(103, "Chitan", 85, "B", "Mumbai"),
+(104, "Dhurv", 96, "A", "Delhi"),
+(105, "Emanuel", 12 , "F", "Delhi"),
+(106, "Farah", 82, "B", "Delhi");
+
+
+select * from student;
+
+
+
+
+alter table student
+add  column age int not null default 19;
+
+
+alter table student
+rename to stu;
+
+( to drop table data)
+Truncate table student;
+
+
+create table students(id int primary key,
+name varchar(50)
+);
+
+
+
+insert into students (id, name)
+values 
+(101,"adam"),
+(102,"bof"),
+(103,"casey");
+
+
+create table course(id int primary key,
+course varchar(50)
+);
+
+
+
+insert into course (id, course)
+values 
+(102,"english"),
+(105,"math"),
+(103,"science"),
+(107,"computer science");
+
+
+
+select * 
+from students
+inner join course
+on students.id = course.id;
+
+
+(Alias means alternate name)
+
+select * 
+from students as a
+inner join course as b
+on a.id = b.id;
+
+
+
+select * 
+from students as a
+left join course as b
+on a.id = b.id;
+
+
+
+
+select * 
+from students as a
+left join course as b
+on a.id = b.id
+union
+select * 
+from students as a
+right join course as b
+on a.id = b.id;
+
+
+(Left Exclusive Join)
+select * 
+from students as a
+left join course as b
+on a.id = b.id
+where b.id is null;
+
+
+(Right Exclusive Join)
+select * 
+from students as a
+right join course as b
+on a.id = b.id
+where a.id is null;
+
+
+(To perform a full exclusive join (also known as a full outer join with exclusion) in MySQL)
+-- Left Exclusive Join
+SELECT a.*, NULL AS course_id, NULL AS course_name
+FROM students AS a
+LEFT JOIN course AS b ON a.id = b.id
+WHERE b.id IS NULL
+
+UNION ALL
+
+-- Right Exclusive Join
+SELECT NULL AS id, NULL AS student_name, b.*
+FROM students AS a
+RIGHT JOIN course AS b ON a.id = b.id
+WHERE a.id IS NULL;
+
+
+
+create table employee(
+id int primary key,
+name varchar(50),
+manager_id int
+);
+
+
+
+insert into employee (id, name, manager_id)
+values
+(101,"adam", 103),
+(102,"bof", 104),
+(103,"casey", Null),
+(104,"donaled", 103);
+
+
+select * from employee as a
+join employee as b
+on a.id= b.manager_id;
+
+
+
+select a.name as manager_name, b.name
+ from employee as a
+join employee as b
+on a.id= b.manager_id;
+
+
+
+select name from employee
+union all
+select name from employee;
+
+
+
+CREATE TABLE STUDENT(
+rollno int primary key,
+NAME varchar(50),
+MARKS INT NOT NULL,
+GRADE varchar(1),
+CITY varchar(20)
+);
+
+
+INSERT INTO student
+(rollno, name, marks, grade, city)
+values
+(101, "Anil", 78, "C", "Pune"),
+(102, "Bhumka", 93, "A", "MUmbai"),
+(103, "Chitan", 85, "B", "Mumbai"),
+(104, "Dhurv", 96, "A", "Delhi"),
+(105, "Emanuel", 12 , "F", "Delhi"),
+(106, "Farah", 82, "B", "Delhi");
+
+select * from student;
+
+select avg(marks)
+from student;
+
+select name
+from student
+where marks > 74.3333;
+
+
+select name, marks
+from student
+where marks > 74.3333;
+
+
+(dynamic quries)
+select name, marks
+from student
+where marks > (select avg(marks) from student);
+
+
+( when we need even number)
+select rollno
+from student
+where rollno % 2 = 0;
+
+
+select name, rollno
+from student
+where rollno in (102, 104, 106);
+
+( we can use sub quires to get dinamic result)
+select name, rollno
+from student
+where rollno in (
+     select rollno
+     from student
+     where rollno % 2 = 0);
+
+
+select max(MARKS)
+from (select * from student where city="MUmbai") as temp;
+
+( we can use this method for this)
+select max(marks)
+from student
+where city = "mumbai";
+
+
+( not very importent but we use it)
+select (select max(marks) from student), name
+from student;
+
+( we can creat virtual table. it can onley efect view table not actuial table )
+create view view1 as
+select rollno , name, marks from student;
+
+select * from view1;
+
+
+select * from view1
+where marks > 90;
+
+
+drop view view1;
+
+
+

@@ -1,0 +1,637 @@
+
+Wher Clause in MySQL| Beginner MySQL series............................................................................
+
+select * from employee_demographics       # "and" operator is use for both 1 and 2 condition should be executeable same time
+where birth_date > '1985-01-01'
+and gender = 'male';
+
+
+select * from employee_demographics      # "OR" operator is use for either 1 or 2 condition are executeable 
+where birth_date > '1985-01-01'
+or gender = 'male';
+
+
+select * from employee_demographics
+where birth_date > '1985-01-01'
+or not gender = 'male';
+
+select * from employee_demographics                                          # PEMDAS roule is used 
+where (first_name = 'Leslie' and age = 44) or age > 55;
+
+
+-- LIKE Statement
+The % is a wildcard character that matches zero or more characters.
+
+-- % and _                   #   'Jer%' starting from "Jer" every thing after that
+select * from employee_demographics
+where first_name LIKE 'Jer%';
+
+
+select * from employee_demographics         #     ' % er % ' means every thing from 'er' before and after
+where first_name LIKE '%er%';
+
+
+select * from employee_demographics         #   'A%' starting from "A" every thing after that
+where first_name LIKE 'A%';
+
+
+select * from employee_demographics          #      'a__' means  '     start with 'a' 2 chracters are come  after this 
+where first_name LIKE 'a__';
+
+
+select * from employee_demographics     #   'a___% ' means start with 'a' 3 chracters are come  and any thing  after that
+where first_name LIKE 'a___%';
+
+
+select * from employee_demographics         #  '1989%'  means start with 1989
+where birth_date LIKE '1989%';
+
+
+Group By + Order By in MySQL | Beginner MySQL Series.....................................................................................
+
+select gender, AVG(age)
+from employee_demographics
+group by gender;
+
+
+select occupation, salary
+from employee_salary
+group by occupation, salary;
+
+
+select gender, AVG(age), MIN(age), MAX(age), count(age)
+from employee_demographics
+group by gender;
+
+
+-- ORDER BY
+
+SELECT * 
+FROM employee_demographics
+order by first_name DESC;
+
+
+select * 
+from employee_demographics
+order by gender, age;
+
+
+
+select gender, avg(age)
+from employee_demographics
+group by gender 
+having avg(age) > 40;
+
+
+select occupation, avg(salary)
+from employee_salary
+where occupation LIKE '%manager%'
+group by occupation
+having avg(salary) > 75000;
+
+
+Limit + Aliasing in MySQL | MySQL Beginner Series...............................................................................
+
+select * from employee_demographics                             # LIMIT 3: Restricts the result set to the first 3 rows after sorting.
+order by age desc
+limit 3;
+
+
+select * from employee_demographics                            # Here, LIMIT 3, 1 specifies that the result set should start from the 4th row           order by age desc                                       # (offset 3) and return only 1 row.
+limit 3, 1;    
+                                                          
+
+
+select gender, avg(age) avg_age                                       # we can write this query without Alias 
+from employee_demographics
+group by gender
+having avg_age > 40;
+
+
+
+Joins in MySQL | Intermediate MySQL.......................................................................................................................
+
+
+select * from employee_demographics
+inner join employee_salary
+on employee_demographics.employee_id = employee_salary.employee_id;
+
+
+select dem.employee_id, age, occupation
+from employee_demographics as dem
+inner join employee_salary as sal
+on dem.employee_id = sal.employee_id;
+
+
+select *
+from employee_demographics as dem
+left join employee_salary as sal
+on dem.employee_id = sal.employee_id;
+
+
+select *
+from employee_demographics as dem
+right join employee_salary as sal
+on dem.employee_id = sal.employee_id;
+
+
+
+select * 
+from employee_demographics as dem
+inner join employee_salary as sal
+	on dem.employee_id = sal.employee_id
+inner join parks_departments pd
+	on sal.dept_id = pd.department_id;
+
+
+
+#UNIONS
+
+
+#A union is how you can combine rows together- not columns like we have been doing with joins where one column is put next to another
+#Joins allow you to combine the rows of data
+
+#Now you should keep it the same kind of data otherwise if you start mixing tips with first_names it would be really confusing, but you can do it.
+#Let's try it out and use Union to bring together some random data, then we will look at an actual use case
+
+SELECT first_name, last_name
+FROM employee_demographics
+UNION
+SELECT occupation, salary
+FROM employee_salary;
+
+#So you can see we basically combined the data together, but not side by side in different columns, but one on top of the other in the same columns
+#This obviously is not good since you're mixing data, but it can be done if you want.
+
+SELECT first_name, last_name
+FROM employee_demographics
+UNION
+SELECT first_name, last_name
+FROM employee_salary;
+
+-- notice it gets rid of duplicates? Union is actually shorthand for Union Distinct
+
+SELECT first_name, last_name
+FROM employee_demographics
+UNION DISTINCT
+SELECT first_name, last_name
+FROM employee_salary;
+
+-- we can use UNION ALL to show all values
+
+SELECT first_name, last_name
+FROM employee_demographics
+UNION ALL
+SELECT first_name, last_name
+FROM employee_salary;
+
+
+
+#Now Let's actually try to use UNION
+# The Parks department is trying to cut their budget and wants to identify older employees they can push out or high paid employees who they can reduce pay or push out
+-- let's create some queries to help with this
+
+SELECT first_name, last_name, 'Old'
+FROM employee_demographics
+WHERE age > 50;
+
+
+
+SELECT first_name, last_name, 'Old Lady' as Label
+FROM employee_demographics
+WHERE age > 40 AND gender = 'Female'
+UNION
+SELECT first_name, last_name, 'Old Man'
+FROM employee_demographics
+WHERE age > 40 AND gender = 'Male'
+UNION
+SELECT first_name, last_name, 'Highly Paid Employee'
+FROM employee_salary
+WHERE salary >= 70000
+ORDER BY first_name
+;
+
+
+
+Unions in MySQL | Intermediate MySQL........................................................................................
+
+    select first_name, last_name          # union means all distinct or without dublicates values from two or more tables
+    from employee_demographics
+    union
+    select first_name, last_name
+    from employee_salary;
+
+
+select first_name, last_name          # union All means all with dublicates values from two or more tables
+    from employee_demographics
+    union All
+    select first_name, last_name
+    from employee_salary;
+
+
+select first_name, last_name, 'old Man' as Label
+from employee_demographics
+where age> 40 and gender = 'Male'
+union
+select first_name, last_name, 'old Man' as Label
+from employee_demographics
+where age> 40 and gender = 'Female'
+union
+select first_name, last_name, 'High Paid Employee' as Label
+from employee_salary
+where salary> 70000
+order by first_name, last_name;
+
+
+String Functions in MySQL | Intermediate MySQL Series...................................................................
+
+select LENGTH('skyfall');
+
+
+# ORDER BY 2: This orders the results based on the second column selected (which is the length calculated by length(first_name)). The number 2 refers to the position of the column in the SELECT clause (1-based indexing).
+
+select first_name, length(first_name)
+from employee_demographics
+order by 2;
+
+
+select upper('sky');
+select lower('SKY');
+
+select first_name, upper(first_name)
+from employee_demographics
+;
+
+select trim('            SKY      ');
+
+select ltrim('            SKY      ');
+
+select rtrim('            SKY      ');
+
+
+select first_name, left(first_name, 4)                   # first 4 name charachter will appers
+from employee_demographics;
+
+
+select first_name, 
+left(first_name, 4),
+right(first_name, 4),
+substring(first_name,3,2),                         # starting from chracter 3 and 2 character come 
+birth_date,
+substring(birth_date,6,2) as birth_month  
+from employee_demographics;
+
+
+select first_name, 	replace(first_name, 'a','z')    # in the first name row replace small "a" with small 'z'
+from employee_demographics;
+
+
+select locate('x', 'Alexander');       # chack the location of x is on 4
+
+select first_name, 	locate('An',first_name)   # chack the 'An' in first_name column 
+from employee_demographics;
+
+
+select first_name, last_name,
+concat(first_name, ' ', last_name) AS full_name
+from employee_demographics;
+
+
+Case Statements in MySQL | Intermediate MySQL.....................................................................................................
+
+
+-- Case Statements
+select first_name,
+last_name,
+age,
+CASE
+	WHEN age <= 30 THEN 'Young'
+    WHEN age between 31 AND 50 THEN 'Old'
+    WHEN age >= 50 THEN "ON DETH`S DOOR"
+END  AS AGE_BRACLET
+FROM employee_demographics;
+
+
+
+-- < 50000 = 5%
+-- < 50000 = 7%
+-- < Finance 50000 = 10% bouns
+select first_name, last_name, salary,
+CASE
+	WHEN salary < 50000 THEN salary + (salary * 0.05)        # we can calculate this "salary * 1.o5"
+    WHEN salary > 50000 THEN salary * 1.07
+    END AS new_salary,
+    CASE
+    WHEN dept_id = 6 THEN salary * .10
+    END as Bonus
+from employee_salary;
+
+
+Subqueries in MySQL | Intermediate MySQL..........................................................................................
+
+
+-- Subqueries
+
+select * 
+from employee_demographics
+where employee_id IN
+(select employee_id 
+from employee_salary
+where dept_id = 1);
+
+select first_name, salary,
+(select AVG(salary)
+from employee_salary)
+from employee_salary;
+
+select gender, AVG(age), max(age), MIN(age), COUNT(age)
+from employee_demographics
+group by gender;
+
+select avg(max_age)
+from 
+(select gender, 
+AVG(age) as avg_age, 
+max(age) as max_age, 
+MIN(age) as min_age, 
+COUNT(age)
+from employee_demographics
+group by gender) as agg_table;
+
+
+
+Window Functions in MySQL | Intermediate MySQL....................................................................................
+
+-- window functions
+
+select gender, avg(salary) as avg_salary
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id
+    group by gender;
+
+
+select gender, avg(salary) over(partition by gender)
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id;
+
+
+select dem.first_name, dem.last_name, avg(salary) over(partition by gender)                  # it does not effect on result because we use windows function 
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id;
+
+
+
+select dem.first_name, dem.last_name,gender,salary,
+ sum(salary) over(partition by gender order by dem.employee_id) as rolling_Total                  # it does not effect on result because we use windows function 
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id;
+
+
+
+select dem.employee_id,dem.first_name, dem.last_name,gender,salary,
+row_number() over(partition by gender order by salary desc)as row_num,
+rank() over(partition by gender order by salary desc) rank_num,
+dense_rank() over(partition by gender order by salary desc) dense_rank_num
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id;
+
+
+
+
+CTEs in MySQL | Advanced MySQL Series...........................................................................................................................................................................................
+
+
+
+with CTE_EXAMPLE AS
+(
+select gender, avg(salary) as avg_salary, MAX(salary) as MAX_salary, MIN(salary) as MIN_salary, COUNT(salary) as COUNT_salary
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id
+    group by gender
+    )
+    select avg(avg_salary)
+    from CTE_Example;
+
+
+
+with CTE_EXAMPLE AS
+(
+select employee_id, gender, birth_date
+from employee_demographics 
+where birth_date > '1985-01-01'
+),
+CTE_Example2 AS
+(
+    select employee_id, salary
+    from employee_salary
+    where salary > 50000
+    )
+    select * 
+    from CTE_Example 
+    join CTE_Example2
+       on CTE_Example.employee_id = CTE_Example2.employee_id;
+
+
+
+
+with CTE_EXAMPLE(Gender, avg_salary, max_sal, min_sal, count_sal) as                                                                                                                  # we can change or overwrite alies 
+(
+select gender, avg(salary) as avg_salary, MAX(salary) as MAX_salary, MIN(salary) as MIN_salary, COUNT(salary) as COUNT_salary
+from employee_demographics dem
+join employee_salary sal
+	on dem.employee_id = sal.employee_id
+    group by gender
+    )
+    select *
+    from CTE_Example
+    ;
+
+
+
+Temp Tables in MySQL | Advanced MySQL Series.........................................................................................................................................................................................................
+
+
+
+-- Using Temporary Tables
+-- Temporary tables are tables that are only visible to the session that created them. 
+-- They can be used to store intermediate results for complex queries or to manipulate data before inserting it into a permanent table.
+
+-- There's 2 ways to create temp tables:
+-- 1. This is the less commonly used way - which is to build it exactly like a real table and insert data into it
+
+
+
+
+CREATE TEMPORARY TABLE temp_table
+(first_name varchar(50),
+last_name varchar(50),
+favorite_movie varchar(100)
+);
+
+
+
+
+-- if we execute this it gets created and we can actualyl query it.
+
+
+
+SELECT *
+FROM temp_table;
+
+
+-- notice that if we refresh out tables it isn't there. It isn't an actual table. It's just a table in memory.
+
+-- now obviously it's balnk so we would need to insert data into it like this:
+
+
+
+INSERT INTO temp_table
+VALUES ('Alex','Freberg','Lord of the Rings: The Twin Towers');
+
+
+
+-- now when we run it and execute it again we have our data
+
+
+
+SELECT *
+FROM temp_table;
+
+
+
+-- the second way is much faster and my preferred method
+-- 2. Build it by inserting data into it - easier and faster
+
+
+
+CREATE TEMPORARY TABLE salary_over_50k
+SELECT *
+FROM employee_salary
+WHERE salary > 50000;
+
+
+
+-- if we run this query we get our output
+
+
+SELECT *
+FROM salary_over_50k;
+
+
+
+-- this is the primary way I've used temp tables especially if I'm just querying data and have some complex data I want to put into boxes or these temp tables to use later
+-- it helps me kind of categorize and separate it out
+
+-- In the next lesson we will look at the Temp Tables vs CTEs
+
+
+
+Stored Procedures in MySQL | Advanced MySQL Series.....................................................................................................................................................................
+
+
+
+-- Stored Procedures
+
+select * from employee_salary
+WHERE salary >= 50000;
+
+CREATE procedure large_salaries()
+select * 
+from employee_salary
+where salary >= 50000;
+
+
+CALL large_salaries();
+
+DELIMITER $$
+CREATE procedure large_salaries2(p_employee_id int)
+BEGIN
+select salary 
+from employee_salary
+where employee_id = p_employee_id;
+END $$
+DELIMITER ;
+
+CALL large_salaries2();
+
+
+DELIMITER $$
+CREATE procedure large_salaries3(p_employee_id INT)
+BEGIN
+select salary 
+from employee_salary
+where employee_id = p_employee_id
+;
+END $$
+DELIMITER ;
+
+CALL large_salaries3(1);
+
+
+
+Triggers and Events in MySQL | Advanced MySQL Series.........................................................................................................................................................
+
+
+
+-- Triggers and Events
+
+select * 
+from employee_demographics;
+
+select * 
+from employee_salary; 
+
+
+DELIMITER $$
+create trigger employee_insert
+     after insert ON employee_salary
+     for each row
+BEGIN
+     INSERT INTO employee_demographics (employee_id, first_name, last_name)
+     values (new.employee_id, new.first_name, new.last_name);
+end $$
+DELIMITER ;
+
+
+INSERT INTO employee_salary (employee_id, first_name, last_name, occupation, salary, dept_id)
+VALUES(13, 'Jean-Ralphio', 'Saperstein', 'Entertainment 720 CEO', 1000000, NULL);
+
+
+-- events 
+
+SELECT * 
+FROM parks_and_recreation.employee_demographics;
+
+DROP EVENT IF EXISTS delete_retirees;
+DELIMITER $$
+CREATE EVENT delete_retirees
+ON SCHEDULE EVERY 30 SECOND
+DO BEGIN
+	DELETE
+	FROM parks_and_recreation.employee_demographics
+    WHERE age >= 60;
+END $$
+
+-- if this not work do this
+
+SHOW variables LIKE 'EVENT%';
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,250 @@
+
+# CONCAT_WS stands for "Concatenate With Separator".
+It concatenates multiple string arguments using a specified separator.
+The first argument is the separator, and the subsequent arguments are the strings to be concatenated.
+
+
+SELECT CustomerName, CONCAT_WS('_ ', Addressline1, PostalCode, City, Country) AS Address
+FROM Customers;
+
+
+
+
+
+select o.orderNumber, o.orderDate, c.CustomerName
+from customers as c,orders as o
+where c.customername='Blauer See Auto, Co.' and c.customernumber=o.customernumber;
+
+without alies
+
+SELECT Orders.orderNumber, Orders.OrderDate, Customers.CustomerName
+FROM Customers, Orders
+WHERE Customers.CustomerName='Blauer See Auto, Co.' AND Customers.customernumber=Orders.customernumber;
+
+
+SELECT  Orders.orderNumber, Customers.CustomerName
+FROM Customers
+INNER JOIN orders ON Customers.Customernumber = Orders.customernumber;
+
+
+JOIN Three Tables
+
+SELECT Orders.orderNumber, Customers.CustomerName, payments.checkNumber
+FROM ((Orders
+INNER JOIN Customers ON Customers.Customernumber = Orders.customernumber)
+INNER JOIN payments ON Orders.customernumber = payments.customernumber);
+
+
+
+
+SELECT Customers.CustomerName, Orders.orderNumber
+FROM Customers
+LEFT JOIN Orders ON Customers.Customernumber = Orders.customernumber
+ORDER BY Customers.CustomerName;
+
+
+SELECT Orders.customernumber, Employees.LastName, Employees.FirstName
+FROM Orders
+RIGHT JOIN Employees ON Orders.customernumber = Employees.Employeenumber
+ORDER BY Orders.customernumber;
+
+
+select Customers.CustomerName, Orders.customernumber
+FROM customers
+cross join orders;
+
+
+select Customers.CustomerName, Orders.customernumber
+FROM customers
+cross join orders
+WHERE Customers.Customernumber=Orders.customernumber;
+
+
+select Customers.CustomerName, Orders.customernumber
+FROM customers
+cross join orders
+WHERE Customers.Customernumber=Orders.customernumber;
+
+
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.Customernumber <> B.Customernumber
+AND A.City = B.City
+ORDER BY A.City;
+
+select A.ordernumber as order1, B.ordernumber as order2, A.status
+from orders A , orders B
+where A.ordernumber != B.ordernumber
+and A.status = B.status
+order by A.status;
+
+
+select city from customers
+union
+select city from offices
+order by city;
+
+
+
+select customernumber from
+customers
+union all
+select customerNumber from
+orders
+order by customerNumber;
+
+
+SELECT City, Country FROM Customers
+WHERE Country='Germany'
+UNION
+SELECT City, Country FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+
+
+SELECT City, Country FROM Customers
+WHERE Country='Germany'
+UNION all
+SELECT City, Country FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+
+
+SELECT 'Customer' AS Type, state, City, Country
+FROM Customers
+UNION
+SELECT 'offices', state, City, Country
+FROM offices;
+
+
+
+SELECT COUNT(Customernumber), Country
+FROM Customers
+GROUP BY Country;
+
+
+select country, count(Customernumber)
+from customers
+group by country;
+
+
+SELECT COUNT(Customernumber), Country
+FROM Customers
+GROUP BY Country
+ORDER BY COUNT(Customernumber) desc;
+
+
+select customers.customername, count(orders.orderNumber) as numberoforders from orders
+left join customers on orders.orderNumber = customers.city
+group by customername;
+
+
+select count(customername), country
+from customers
+group by country
+having count(customerName) > 5
+ORDER BY COUNT(customername) DESC;
+
+SELECT customers.contactLastName, COUNT(Orders.Ordernumber) AS NumberOfOrders
+FROM (Orders
+INNER JOIN customers ON Orders.Ordernumber = customers.customernumber)
+GROUP BY contactLastName
+HAVING COUNT(Orders.Ordernumber) > 10;
+
+
+SELECT Employees.LastName, COUNT(Orders.OrderID) AS NumberOfOrders
+FROM Orders
+INNER JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+WHERE LastName = 'Davolio' OR LastName = 'Fuller'
+GROUP BY LastName
+HAVING COUNT(Orders.OrderID) > 25;
+
+
+
+Single Line Comments
+Single line comments start with --.
+
+
+
+Multi-line Comments
+Multi-line comments start with /* and end with */.
+
+Any text between /* and */ will be ignored.
+
+
+
+The following SQL creates a new table called "TestTables" (which is a copy of the "Customers" table): 
+
+create table testtable as 
+select customername, contactname
+from customers;
+
+
+
+
+Advanced Concepts (Optional)
+
+If applicable, highlight the use of advanced SQL features, such as:
+Window functions (ROW_NUMBER(), RANK()).
+CTEs (Common Table Expressions).
+Triggers, stored procedures, or views.
+
+
+Tailor for Your Desired Role: Customize your portfolio to the type of SQL work you want (e.g., data analysis, database administration, or reporting).Best data set for portfolio.
+
+
+Query Optimization
+Performance Tuning: Ask ChatGPT to suggest how to optimize queries. It might recommend creating indexes, using more efficient joins, or replacing subqueries with CTEs.
+
+
+b. Understanding Error Messages
+SQL error messages can sometimes be cryptic, especially for beginners. You can ask ChatGPT to explain what an error message means and how to resolve it. 
+
+
+3. Explaining SQL Concepts
+When you're unsure about a specific SQL concept, you can ask ChatGPT for an explanation. It can give you clear, step-by-step explanations and practical examples to solidify your understanding. 
+
+
+Clarification of SQL Concepts
+Joins: If you’re confused about the differences between inner, left, right, and full joins, ChatGPT can explain them with examples.
+
+
+Window Functions: If you’re learning window functions like ROW_NUMBER(), RANK(), or LAG(), ChatGPT can explain their use cases and show you how to write queries using them.
+
+
+b. SQL Best Practices
+You can ask ChatGPT for advice on SQL best practices, such as:
+
+When to use indexes.
+How to structure a database for optimal performance.
+How to name tables and columns to ensure clarity and consistency.
+Example:
+
+You: "What are best practices for naming columns in a SQL database?"
+ChatGPT Response: "Use clear, descriptive names. Avoid spaces and special characters; instead, use underscores for multi-word names (e.g., first_name). Be consistent with singular/plural forms: use singular for entities like customer and plural for collections like invoices."
+
+
+ 5. Creating and Testing Database Design
+Database design is an important skill for SQL jobs. You can ask ChatGPT to help you:
+
+a. Design Database Schema
+Describe a business case (e.g., for an online store, a library, or a school management system), and ask ChatGPT to help you design a normalized database schema with tables, relationships, and primary keys.
+Example:
+
+You: "I want to design a database for a small bookstore. How should I structure the tables?"
+
+
+6. Learning New SQL Features and Technologies
+SQL continues to evolve with new features and extensions, such as support for JSON, full-text search, or advanced analytical capabilities. ChatGPT can help you learn:
+
+a. New SQL Features
+Ask ChatGPT about the latest features in MySQL, PostgreSQL, or other databases, and get examples on how to use them.
+Example:
+
+You: "How do I work with JSON data in MySQL?
+
+
+Security
+Access Controls: Manage user privileges, roles, and permissions securely using MySQL’s built-in access control systems.
+Encryption: Knowledge of MySQL’s data-at-rest encryption options, SSL/TLS for secure connections, and compliance with data privacy regulations.
+Security Patches: Ensure regular security patching and updates to avoid vulnerabilities.

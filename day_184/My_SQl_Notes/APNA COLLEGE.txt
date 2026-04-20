@@ -1,0 +1,432 @@
+use danish;
+
+DROP table temp1;
+
+
+CREATE table temp1(
+id int,
+name varchar(50),
+age int,
+city varchar(50),
+primary key (id)
+);
+
+
+CREATE table temp(
+id int,
+salary int default 25000);
+
+insert into temp (id) values (101);
+
+select * from temp;
+
+
+CREATE TABLE STUDENT(
+rollno int primary key,
+NAME varchar(50),
+MARKS INT NOT NULL,
+GRADE varchar(1),
+CITY varchar(20)
+);
+
+
+INSERT INTO student
+(rollno, name, marks, grade, city)
+values
+(101, "Anil", 78, "C", "Pune"),
+(102, "Bhumka", 93, "A", "MUmbai"),
+(103, "Chitan", 85, "B", "Mumbai"),
+(104, "Dhurv", 96, "A", "Delhi"),
+(105, "Emanuel", 12 , "F", "Delhi"),
+(106, "Farah", 82, "B", "Delhi");
+
+
+use college;
+select * from student;
+select name from student;
+select name,rollno from student;
+select distinct city from student;
+
+select *
+from student
+where marks > 80;
+
+select *
+from student
+where marks > 80 and city = "mumbai";
+
+select *
+from student
+where marks > 80 or city = "mumbai";
+
+select *
+from student
+where marks between 80 and 90;
+
+select *
+from student
+where city in ("mumbai","delhi");
+
+select *
+from student
+where city not in ("mumbai","delhi");
+
+select *
+from student
+where marks+10 > 100 ;
+
+select *
+from student
+limit 3;
+
+select *
+from student
+where marks > 80
+limit 3;
+
+select * from student
+order by marks ASC;
+
+
+select * from student	
+order by marks DESC
+limit 3;
+
+select avg(marks) from student;
+select max(marks) from student;
+select min(marks) from student;
+select count(city) from student;
+select avg(marks) from student;
+
+
+select city
+from student 
+group by city;
+
+
+select city, count(rollno)
+from student 
+group by city;
+
+
+select city,MARKS, count(rollno)
+from student 
+group by city,marks;
+
+
+select city, avg(MARKS)
+from student 
+group by city
+order by city ASC;
+
+
+
+select city, avg(MARKS)
+from student 
+group by city
+order by avg(marks) desc;
+
+
+SELECT CITY, AVG(MARKS) AS average_marks
+FROM STUDENT
+GROUP BY CITY
+HAVING AVG(MARKS) > 80;
+
+
+
+
+CREATE TABLE customer_info (
+  customer_id INT PRIMARY KEY,
+  customer_name VARCHAR(255) NOT NULL,
+  mode_of_payment VARCHAR(255) NOT NULL,
+  city VARCHAR(255) NOT NULL
+);
+
+INSERT INTO customer_info (customer_id, customer_name, mode_of_payment, city)
+VALUES
+  (101, 'Olivia Barrett', 'Netbanking', 'Portland'),
+  (102, 'Ethan Sinclair', 'Credit Card', 'Miami'),
+  (103, 'Maya Hernandez', 'Credit Card', 'Seattle'),
+  (104, 'Liam Donovan', 'Netbanking', 'Denver'),
+  (105, 'Sophia Nguyen', 'Credit Card', 'New Orleans'),
+  (106, 'Caleb Foster', 'Debit Card', 'Minneapolis'),
+  (107, 'Ava Patel', 'Debit Card', 'Phoenix'),
+  (108, 'Lucas Carter', 'Netbanking', 'Boston'),
+  (109, 'Isabella Martinez', 'Netbanking', 'Nashville'),
+  (110, 'Jackson Brooks', 'Credit Card', 'Boston');
+
+
+select * from customer_info;
+
+select mode_of_payment, count(customer_name)
+ from customer_info
+group by mode_of_payment;
+
+
+
+select grade , count(rollno)
+from student 
+group by grade 
+order by grade;
+
+
+( if we use "where" clause we use it on rows for appling condition
+when we use "having" clause we use it on group by for appling condition)
+
+
+
+select city,count(rollno)
+from student
+group by city
+having max(MARKS) > 90;
+
+
+
+select city
+from student
+where grade = "A"
+group by city
+having max(MARKS) >= 93
+order by city ASC;
+
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+update student 
+set grade = "0"
+where grade = "A";
+
+
+select * FROM student;
+
+
+update student 
+SET MARKS = '80'
+where MARKS = "	12";
+
+update student
+set grade = 'B'
+where marks between 80 and 90;
+
+
+
+update student set marks = marks + 1;
+
+update student
+ set marks = 12
+ where rollno = 105;
+ 
+ 
+ delete from student
+ where marks < 33;
+ 
+
+delete from student;   # for deleting all rows or table
+
+....................................................................................
+
+create table dept (
+ id int primary key,
+ name varchar(50)
+ );
+ 
+insert into dept
+values
+(101, "english"),
+(102, "IT");
+ 
+ update dept
+ set id= 110
+ where id = 101;
+ 
+ select * from dept;
+ 
+ create table teacher (
+ id int primary key,
+ name varchar(50),
+ dept_id int,
+ foreign key (dept_id) references dept(id)
+ on update cascade
+ on delete cascade
+ );
+ 
+ drop table teacher;
+ 
+ insert into teacher
+ values
+ (101, "Adam", 101),
+ (102, "Eve", 102);
+ 
+ select * from teacher;
+ use college;
+
+.....................................................................................
+
+ALTER TABLE student
+ MODIFY COLUMN age varchar(2);
+ 
+ alter table student
+ change age stu_age int;
+
+insert into student
+(rollno, name, stu_marks, stu_age)
+values
+(107, "gargi", 68, 100);
+
+ select * FROM student;
+
+alter table student drop column stu_age;
+
+alter table stu
+rename to student;
+
+
+truncate table student;
+
+update student
+set grade = "O"
+where grade = "A";
+
+select * from students;
+select * from course;
+
+select * from students
+inner join course
+on students.id = course.id;
+
+
+select * from students as A   # alis means alternate name
+inner join course as B
+on A.id = B.id;
+
+
+
+select * from students as A
+inner join course as B
+on A.id = B.id;
+
+
+select * from students as A
+left join course as B
+on A.id = B.id;
+
+
+select * from students as A
+right join course as B
+on A.id = B.id;
+
+
+select * from students as A
+left join course as B
+on A.id = B.id
+union
+select * from students as A
+right join course as B
+on A.id = B.id;
+
+
+select * from students as A
+left join course as B
+on A.id = B.id
+where B.id is null;
+
+select * from students as A
+right join course as B
+on A.id = B.id
+where A.id is null;
+
+
+
+# full outer join
+select * from student as s
+left join course as c
+on s.rollno = c.id
+where c.id is null
+union
+select * 
+from student as s
+right join course as c
+on s.rollno = c.id
+where s.rollno is null;
+
+or
+
+
+-- Perform a Left Outer Join with Exclusion           
+SELECT A.*, B.*
+FROM students A
+LEFT JOIN course B ON A.id = B.id
+WHERE B.id IS NULL
+
+UNION ALL
+
+-- Perform a Right Outer Join with Exclusion
+SELECT A.*, B.*
+FROM students A
+RIGHT JOIN course B ON A.id = B.id
+WHERE A.id IS NULL;
+
+
+select * from employee;
+
+
+# self join
+select a.name as manager_name, b.name
+from employee as a
+join employee as b
+on a.id = b.manager_id;
+
+
+select name from employee                 # (union) it give us unique values
+union
+select name from employee;
+
+
+select name from employee                 # (union All) it give us all values included dublicates
+union all
+select name from employee;
+
+
+select avg(stu_marks)
+from student;
+
+select full_name, stu_Marks
+from student 
+where stu_Marks > (select avg(stu_marks)from student);
+
+
+select rollno
+from student 
+where rollno % 2 = 0;
+
+select full_name, rollno
+from student
+where rollno in (
+select rollno
+from student 
+where rollno % 2 = 0);
+
+
+
+select max(stu_Marks)
+from (select * from student where city = "Mumbai") AS temp;
+
+select max(stu_Marks)
+from student
+where city = "Mumbai";
+
+# we can not use this we can use only single for single value
+select (select max(stu_Marks) from student) , full_name 
+from student;
+
+
+select rollno, full_name, stu_Marks from student;
+
+select * from view1;
+
+drop view view1;
+
+
+

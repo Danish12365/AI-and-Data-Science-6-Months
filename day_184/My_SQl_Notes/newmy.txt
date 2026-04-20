@@ -1,0 +1,56 @@
+
+
+select * from students;
+select stuage form sutdents;
+select distinct stuage form students;
+select count(distinct stuage) from students;
+
+
+
+# ALTER COMMANDS:
+
+alter table students add city varchar(23);                             # add column
+alter table students add unique (id);                                   # add unique key after table creation
+alter table students drop city;                                                 # drop column
+alter table students drop constraint (id)                                 # drop constraint from id column
+alter table studnents modify city char(22);                            # data type
+alter table students modify city varchar(50) not null;          # add not null constraint after table creation
+alter table students modify city char(22) after stuid;           # replace the column
+alter table students change city town varchar(23);             # change column name
+alter table students rename student1;                                   # change table name
+
+
+
+
+
+
+
+drop table students;                                                                   # delete the table
+
+# UPDATE COMMAND:
+
+update students set town='dear' where stuid='1';                  # add dear in first row wise
+update students set town='dear';                                              # add dear in town column
+update students set town='walse' where stuid='2';                # add walse in 2nd row wise   
+update students set stuid='4', sname='anwar' where town='walse';         # add id 4 and same anwar in wasle row
+
+
+# DELETE COMMANDS:
+
+delete from students where  sid='1';      # delete row 1
+delete from students;                                # all rows  will be  deleted
+truncate table students;                            # delete all table values
+
+
+
+show create table student;
+ alter table std3 drop foreign key std3_ibfk_1;
+
+
+
+
+
+
+
+
+
